@@ -1,0 +1,4 @@
+depend:parameter_manager EXT_xmlParser EXT_utfcpp systemc_utils EXT_systemc synoptic
+LDFLAGS:
+CFLAGS:-g -Wall -ansi -pedantic
+
