@@ -23,11 +23,12 @@
 #include "color_zone.h"
 #include "dicoplus_synoptic_char.h"
 #include "dicoplus_synoptic_port.h"
+#include "cell_listener_if.h"
 #include <inttypes.h>
 
 namespace dicoplus
 {
-  class dicoplus_synoptic_cell: public synoptic::zone_container
+  class dicoplus_synoptic_cell: public synoptic::zone_container, public cell_listener_if
   {
   public:
     inline dicoplus_synoptic_cell(synoptic::synoptic &,
@@ -36,6 +37,11 @@ namespace dicoplus
     inline static void compute_dim(void);
     inline static const uint32_t get_width(void);
     inline static const uint32_t get_height(void);
+
+    // Methods inherited from cell_listener_if
+    inline void set_content(const uint32_t & p_content);
+    //End of methods inherited from cell_listener_if
+
     inline virtual ~dicoplus_synoptic_cell(void){}
   private:
     synoptic::color_zone m_up_border;
@@ -64,6 +70,13 @@ namespace dicoplus
     static const uint32_t m_border_padding;
     static const uint32_t m_middle_dim;
   };
+
+  //----------------------------------------------------------------------------
+  void dicoplus_synoptic_cell::set_content(const uint32_t & p_content)
+  {
+    m_char_display.set_content(p_content);
+    m_char_display.paint();
+  }
 
   //----------------------------------------------------------------------------
   const uint32_t dicoplus_synoptic_cell::get_width(void)

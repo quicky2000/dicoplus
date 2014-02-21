@@ -16,10 +16,7 @@
       along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
 #include "top.h"
-#include "dicoplus_synoptic_grid.h"
-#include "screen_display.h"
 #include "parameter_manager.h"
-#include "synoptic.h"
 
 using namespace std;
 using namespace parameter_manager;
@@ -38,15 +35,6 @@ int sc_main(int argc,char ** argv)
 
       dicoplus::top l_top("top",l_input_file.get_value<std::string>());
       
-      synoptic::synoptic l_synoptic(1550,850);
-      dicoplus::dicoplus_synoptic_cell::compute_dim();
-      dicoplus::dicoplus_synoptic_grid l_grid(l_synoptic,"grid",31,31);
-      l_synoptic.add_zone(642,0,l_grid);
-      dicoplus::screen_display l_screen_display(l_synoptic);
-      l_synoptic.add_zone(0,0,l_screen_display);
-      l_synoptic.pack();
-      l_synoptic.paint();
-      l_synoptic.refresh();
       sleep(10);
       sc_start();
     }

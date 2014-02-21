@@ -34,6 +34,7 @@
 
 namespace dicoplus
 {
+  class cell_listener_if;
   class dicoplus:public sc_module
   {
   public:
@@ -44,6 +45,9 @@ namespace dicoplus
     sc_in<bool> m_clk;
     inline const unsigned int & get_width(void)const;
     inline const unsigned int & get_height(void)const;
+    inline void attach_cell_listener(const uint32_t & p_x,
+				     const uint32_t & p_y,
+				     cell_listener_if & p_listener);
   private:
     inline void clk_management(void);
 
@@ -283,6 +287,27 @@ namespace dicoplus
         delete[] m_global_buses;
 	delete m_injector_global_bus;
       }
+
+    //--------------------------------------------------------------------------
+    void dicoplus::attach_cell_listener(const uint32_t & p_x,
+					const uint32_t & p_y,
+					cell_listener_if & p_listener)
+    {
+      
+      if(p_x >= m_width)
+	{
+	  std::stringstream l_stream;
+	  l_stream << "Value " << p_x << " >= to dicoplus width " << m_width;
+	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
+	}
+      if(p_y >= m_height)
+	{
+	  std::stringstream l_stream;
+	  l_stream << "Value " << p_y << " >= to dicoplus height " << m_height;
+	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
+	}
+      m_cells[p_x][p_y]->set_listener(p_listener);
+    }
 
     //--------------------------------------------------------------------------
     void dicoplus::clk_management(void)

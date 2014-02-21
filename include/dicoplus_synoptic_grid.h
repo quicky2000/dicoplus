@@ -33,6 +33,8 @@ namespace dicoplus
 				  const uint32_t & p_height);
 
     inline ~dicoplus_synoptic_grid(void);
+    inline dicoplus_synoptic_cell & get_cell(const uint32_t & p_x,
+					     const uint32_t & p_y);
   private:
     dicoplus_synoptic_cell *** m_cells;
     const uint32_t m_nb_cell_width;
@@ -41,6 +43,24 @@ namespace dicoplus
     static const uint32_t m_inter_v_cell;
   };
 
+  //----------------------------------------------------------------------------
+  dicoplus_synoptic_cell & dicoplus_synoptic_grid::get_cell(const uint32_t & p_x,
+							    const uint32_t & p_y)
+    {
+      if(p_x >= m_nb_cell_width)
+	{
+	  std::stringstream l_stream;
+	  l_stream << "Value " << p_x << " >= to dicoplus grid synoptic width " << m_nb_cell_width;
+	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
+	}
+      if(p_y >= m_nb_cell_height)
+	{
+	  std::stringstream l_stream;
+	  l_stream << "Value " << p_y << " >= to dicoplus grid symoptic height " << m_nb_cell_height;
+	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
+	}
+      return *(m_cells[p_x][p_y]);
+    }
 
   //----------------------------------------------------------------------------
   dicoplus_synoptic_grid::dicoplus_synoptic_grid(synoptic::synoptic &p_owner,
