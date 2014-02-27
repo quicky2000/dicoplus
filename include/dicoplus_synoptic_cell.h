@@ -154,9 +154,14 @@ namespace dicoplus
   {
     if(!m_computed_dim)
       {
+	std::cout << "Static initialisation : dicoplus_synoptic_cell" << std::endl ;
 	m_computed_dim = true;
 	m_width = 1 * 2 + 2 * 2 + 3 + 2 * dicoplus_synoptic_port::get_short_dim()  + 2 * dicoplus_synoptic_port::get_long_dim();
 	m_height = 1 * 2 + 2 * 1 + 4 * 1 +4 * dicoplus_synoptic_port::get_long_dim();
+      }
+    else
+      {
+	throw quicky_exception::quicky_logic_exception("dicoplus_synoptic_cell dimensions already computed",__LINE__,__FILE__);
       }
   }
 }

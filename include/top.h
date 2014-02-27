@@ -31,7 +31,7 @@ namespace dicoplus
     m_clk("clk",10,SC_NS,05),
     m_dicoplus("dicoplus",p_config_file_name),
     m_synoptic(1550,850),
-    m_grid((dicoplus_synoptic_cell::compute_dim(),dicoplus_char::init(),m_synoptic),"grid",m_dicoplus.get_width(),m_dicoplus.get_height())
+    m_grid(m_synoptic,"grid",m_dicoplus.get_width(),m_dicoplus.get_height())
     {
       // Bind clock
       m_dicoplus.m_clk(m_clk);

@@ -17,7 +17,7 @@
 */
 #include "top.h"
 #include "parameter_manager.h"
-
+#include "static_manager.h"
 using namespace std;
 using namespace parameter_manager;
 
@@ -33,6 +33,7 @@ int sc_main(int argc,char ** argv)
       // Treating parameters
       l_param_manager.treat_parameters(argc,argv);
 
+      dicoplus::static_manager l_static_manager;
       dicoplus::top l_top("top",l_input_file.get_value<std::string>());
       
       sleep(10);

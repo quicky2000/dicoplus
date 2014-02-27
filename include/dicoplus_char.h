@@ -34,6 +34,7 @@ namespace dicoplus
     friend std::ostream& operator<<(std::ostream& s, const dicoplus_char & p_dicoplus_char);
   public:
     inline static void init(void);
+    inline static void clear(void);
     inline static const uint32_t get_code_point(const uint32_t & p_internal_code);
     inline static const uint32_t get_internal_code(const uint32_t & p_code_point);
     inline const uint32_t & get_internal_code(void)const;
@@ -80,7 +81,7 @@ namespace dicoplus
       }
     else
       {
-	throw quicky_exception::quicky_logic_exception("Unknown internal code "+p_internal_code,__LINE__,__FILE__);
+	throw quicky_exception::quicky_logic_exception("dicoplus_char : Unknown internal code "+p_internal_code,__LINE__,__FILE__);
       }
   }
 
@@ -96,7 +97,7 @@ namespace dicoplus
       {
 	dicoplus_char l_char(p_code_point,0);
 	std::stringstream l_stream;
-	l_stream << "Code point " << std::hex << p_code_point << std::dec << " representing char '" << l_char << "' is not supported";
+	l_stream << "dicoplus_char : Code point " << std::hex << p_code_point << std::dec << " representing char '" << l_char << "' is not supported";
 	throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
       }
   }
@@ -120,11 +121,25 @@ namespace dicoplus
       m_internals.push_back(l_char);
     }
 
+
+    //----------------------------------------------------------------------------
+    void dicoplus_char::clear(void)
+    {					    
+      for(std::vector<const dicoplus_char *>::const_iterator l_iter = m_internals.begin();
+	  m_internals.end() != l_iter;
+	  ++l_iter)
+	{
+	  delete(*l_iter);
+	}
+
+    }
+
     //----------------------------------------------------------------------------
     void dicoplus_char::init(void)
     {
-      if(!m_code_points.size())
+      if(!m_code_points.size() && !m_internals.size())
 	{
+	  std::cout << "Static initialisation : dicoplus_char" << std::endl ;
 	  register_code_point(0x20); // " "
 	  register_code_point(0x41); // "A"
 	  register_code_point(0x42); // "B"
@@ -167,6 +182,10 @@ namespace dicoplus
 	  register_code_point(0xd9); // "Ù"
 	  register_code_point(0xdb); // "Û"
 	  register_code_point(0x178); // Y:
+	}
+      else
+	{
+	  throw quicky_exception::quicky_logic_exception("dicoplus char : static content was already initiliazed",__LINE__,__FILE__);
 	}
     }
 }

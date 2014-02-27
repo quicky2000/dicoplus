@@ -19,6 +19,7 @@
 #define _DICOPLUS_SYNOPTIC_CHAR_H_
 
 #include "custom_field_zone.h"
+#include "dicoplus_char.h"
 #include <map>
 #include <inttypes.h>
 #include <string>
@@ -32,10 +33,12 @@ namespace dicoplus
 				  const std::string & p_name);
     inline static const uint32_t & get_width(void);
     inline static const uint32_t & get_height(void);
+    inline static void init(void);
   private:
     // Methods inherited from custom_field_zone
     inline const uint64_t & get_content_representation(const uint32_t & p_content);
     // End of methods inherited from custom_field_zone
+
     static std::map<uint32_t,uint64_t> m_content_representation;
     static const uint64_t m_default_representation;
     static const uint32_t m_width;
@@ -54,55 +57,64 @@ namespace dicoplus
     }
 
   //----------------------------------------------------------------------------
+  void dicoplus_synoptic_char::init(void)
+  {
+      if(!m_content_representation.size())
+	{
+	  // The key is the Unicode code point
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x20), 0x0));   // " "
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x41), 0x454631fc631));   // A
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x42), 0x1e4a52e4a53e));  // B
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x43), 0xe8c2108422e));   // C
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x44), 0x1e4a5294a53e));  // D
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x45), 0x1f8421e8421f));  // E
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x46), 0x1f8421e84210));  // F
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x47), 0xe8c2109c62e));   // G
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x48), 0x118c63f8c631));  // H
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x49), 0xe210842108e));   // I
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x4a), 0x71084210a4c));   // J
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x4b), 0x118ca98a4a31)); // K
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x4c), 0x10842108421f)); // L
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x4d), 0x118eeb58c631)); // M
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x4e), 0x11ce6b59ce31)); // N
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x4f), 0xe8c6318c62e));  // O
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x50), 0x1e8c63e84210)); // P
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x51), 0x1d18c6318d5c1));// Q
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x52), 0x1e8c63ea4a31)); // R
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x53), 0xe8c20e0862e));  // S
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x54), 0x1f2108421084)); // T
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x55), 0x118c6318c62e)); // U
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x56), 0x118c62a52884)); // V
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x57), 0x118c635ad6aa)); // W
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x58), 0x118a94452a31)); // X
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x59), 0x118a94421084)); // Y
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x5a), 0x1f088444221f)); // Z
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xc0), 0x104011518fe31));// À
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xc2), 0xc9011518fe31)); // Â
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xc7), 0x1d1842108b888));// Ç
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xc8), 0x10407e10f421f));// È
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xc9), 0x4407e10f421f)); // É
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xca), 0xc907e10f421f)); // Ê
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xcb), 0x14a07e10f421f));// Ë
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xce), 0xc9038842108e)); // Î
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xcf), 0x14a038842108e));// Ï
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xd4), 0xc903a318c62e)); // Ô
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xdc), 0x14a046318c62e));// Ü
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xd9), 0x104046318c62e));// Ù
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xdb), 0xc9046318c62e)); // Û
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x178), 0x14a0454a21084));// Y:
+	}
+      else
+	{
+	  throw quicky_exception::quicky_logic_exception("dicoplus_synoptic_char content representation already initialised",__LINE__,__FILE__);
+	}
+  }
+
+  //----------------------------------------------------------------------------
   dicoplus_synoptic_char::dicoplus_synoptic_char(synoptic::zone_owner_if & p_owner,
 						 const std::string & p_name):
     synoptic::custom_field_zone(p_owner,p_name,m_width,m_height)
     {
-      if(!m_content_representation.size())
-	{
-	  // The key is the Unicode code point
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x20, 0x0));   // " "
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x41, 0x454631fc631));   // A
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x42, 0x1e4a52e4a53e));  // B
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x43, 0xe8c2108422e));   // C
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x44, 0x1e4a5294a53e));  // D
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x45, 0x1f8421e8421f));  // E
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x46, 0x1f8421e84210));  // F
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x47, 0xe8c2109c62e));   // G
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x48, 0x118c63f8c631));  // H
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x49, 0xe210842108e));   // I
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x4a, 0x71084210a4c));   // J
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x4b, 0x118ca98a4a31)); // K
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x4c, 0x10842108421f)); // L
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x4d, 0x118eeb58c631)); // M
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x4e, 0x11ce6b59ce31)); // N
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x4f, 0xe8c6318c62e));  // O
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x50, 0x1e8c63e84210)); // P
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x51, 0x1d18c6318d5c1));// Q
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x52, 0x1e8c63ea4a31)); // R
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x53, 0xe8c20e0862e));  // S
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x54, 0x1f2108421084)); // T
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x55, 0x118c6318c62e)); // U
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x56, 0x118c62a52884)); // V
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x57, 0x118c635ad6aa)); // W
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x58, 0x118a94452a31)); // X
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x59, 0x118a94421084)); // Y
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x5a, 0x1f088444221f)); // Z
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xc0, 0x104011518fe31));// À
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xc2, 0xc9011518fe31)); // Â
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xc7, 0x1d1842108b888));// Ç
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xc8, 0x10407e10f421f));// È
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xc9, 0x4407e10f421f)); // É
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xca, 0xc907e10f421f)); // Ê
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xcb, 0x14a07e10f421f));// Ë
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xce, 0xc9038842108e)); // Î
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xcf, 0x14a038842108e));// Ï
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xd4, 0xc903a318c62e)); // Ô
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xdc, 0x14a046318c62e));// Ü
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xd9, 0x104046318c62e));// Ù
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0xdb, 0xc9046318c62e)); // Û
-	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(0x178, 0x14a0454a21084));// Y:
-	}
     }
 
     //--------------------------------------------------------------------------
