@@ -28,7 +28,7 @@ namespace dicoplus
   top::top(sc_module_name name,
 	   const std::string & p_config_file_name):
     sc_module(name),
-    m_clk("clk",10,SC_NS,05),
+    m_clk("clk",10,SC_NS,0.5),
     m_dicoplus("dicoplus",p_config_file_name),
     m_synoptic(1550,850),
     m_grid(m_synoptic,"grid",m_dicoplus.get_width(),m_dicoplus.get_height())
