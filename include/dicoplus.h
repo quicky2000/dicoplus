@@ -313,7 +313,6 @@ namespace dicoplus
     void dicoplus::clk_management(void)
     {
       m_clk_sig.write(m_clk.read());
-      sc_stop();
     }
 
     //--------------------------------------------------------------------------
