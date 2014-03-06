@@ -36,7 +36,6 @@ int sc_main(int argc,char ** argv)
       dicoplus::static_manager l_static_manager;
       dicoplus::top l_top("top",l_input_file.get_value<std::string>());
       
-      sleep(10);
       sc_start();
     }
   catch(quicky_exception::quicky_runtime_exception & e)
