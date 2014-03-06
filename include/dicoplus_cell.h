@@ -40,6 +40,8 @@ namespace dicoplus
 
     sc_in<bool> m_clk;
   private:
+    void run(void);
+
     dicoplus_global_port_manager m_global_port_manager;
     cell_listener_if * m_listener;
   };
@@ -51,6 +53,10 @@ namespace dicoplus
     m_global_port_manager("global_port_manager"),
     m_listener(NULL)
       {
+	m_global_port_manager.m_clk(m_clk);
+
+	SC_THREAD(run);
+	sensitive << m_clk.pos();
       }
 
   //----------------------------------------------------------------------------
@@ -69,6 +75,20 @@ namespace dicoplus
     void dicoplus_cell::bind_output_port(dicoplus_global_bus & p_bus)
     {
       m_global_port_manager.bind_output_port(p_bus);
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_cell::run(void)
+    {
+      while(1)
+	{
+	  if(m_global_port_manager.message_received())
+	    {
+	      std::cout << name() << " : Reading message" << std::endl ;
+	      const dicoplus_global_message_base & l_msg = m_global_port_manager.get_message();
+	    }
+	  wait();
+	}
     }
   
 }

@@ -37,6 +37,8 @@ namespace dicoplus
 
     sc_in<bool> m_clk;
   private:
+    void run(void);
+
     dicoplus_global_port_manager m_global_port_manager;
   };
 
@@ -46,6 +48,10 @@ namespace dicoplus
     m_clk("clk"),
     m_global_port_manager("global_port_manager")
       {
+	m_global_port_manager.m_clk(m_clk);
+
+	SC_THREAD(run);
+	sensitive << m_clk.pos();	
       }
 
     //----------------------------------------------------------------------------
@@ -58,6 +64,23 @@ namespace dicoplus
     void dicoplus_injector::bind_output_port(dicoplus_global_bus & p_bus)
     {
       m_global_port_manager.bind_output_port(p_bus);
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_injector::run(void)
+    {
+      std::cout << "Injector starting !" << std::endl ;		       
+	  m_global_port_manager.post_message(*new dicoplus_global_message_char(1));
+	  wait();
+	  m_global_port_manager.post_message(*new dicoplus_global_message_char(2));
+	  wait();
+	  m_global_port_manager.post_message(*new dicoplus_global_message_char(3));
+	  wait();
+	  m_global_port_manager.post_message(*new dicoplus_global_message_char(4));
+	  wait();
+	  wait();
+	  wait();
+	  sc_stop();
     }
   
 }

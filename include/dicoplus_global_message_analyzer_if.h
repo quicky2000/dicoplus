@@ -1,5 +1,5 @@
 /*    This file is part of dicoplus
-      The aim of this software is to solvde dicoplus game
+      The aim of this software is to solve dicoplus game
       Copyright (C) 2014  Julien Thevenon ( julien_thevenon at yahoo.fr )
 
       This program is free software: you can redistribute it and/or modify
@@ -15,33 +15,23 @@
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef _DICOPLUS_GLOBAL_BUS_H_
-#define _DICOPLUS_GLOBAL_BUS_H_
-
-#include "systemc.h"
-#include "dicoplus_types.h"
-#include <string>
+#ifndef _DICOPLUS_GLOBAL_MESSAGE_ANALYZER_IF_H
+#define _DICOPLUS_GLOBAL_MESSAGE_ANALYZER_IF_H
 
 namespace dicoplus
 {
-  class dicoplus_global_bus
+  class dicoplus_global_message_char;
+  class dicoplus_global_message_separator;
+
+  class dicoplus_global_message_analyzer_if
   {
   public:
-    inline dicoplus_global_bus(const std::string & p_name);
-    sc_signal<bool> m_req;
-    sc_signal<bool> m_ack;
-    sc_signal<typename dicoplus_types::t_global_cmd_type> m_cmd;
-    sc_signal<typename dicoplus_types::t_global_data_type> m_data;
+    virtual void treat(const dicoplus_global_message_char & p_message)=0;
+    virtual void treat(const dicoplus_global_message_separator & p_message)=0;
+    inline virtual ~dicoplus_global_message_analyzer_if(void){}
   private:
   };
-
-  //----------------------------------------------------------------------------
-  dicoplus_global_bus::dicoplus_global_bus(const std::string & p_name):
-    m_req((p_name+"_req").c_str()),
-    m_ack((p_name+"_ack").c_str()),
-    m_cmd((p_name+"_cmd").c_str()),
-    m_data((p_name+"_data").c_str())
-    {
-    }
 }
-#endif // _DICOPLUS_GLOBAL_BUS_H_
+
+#endif // _DICOPLUS_GLOBAL_MESSAGE_ANALYZER_IF_H
+//EOF

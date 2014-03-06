@@ -20,26 +20,48 @@
 
 #include "dicoplus_global_input_port.h"
 #include "dicoplus_global_output_port.h"
+#include "dicoplus_global_message_box.h"
+#include "dicoplus_global_message_factory.h"
 
 namespace dicoplus
 {
   class dicoplus_global_port_manager:sc_module
   {
   public:
+    SC_HAS_PROCESS(dicoplus_global_port_manager);
     inline dicoplus_global_port_manager(sc_module_name p_name);
     inline void bind_input_port(dicoplus_global_bus & p_bus);
     inline void bind_output_port(dicoplus_global_bus & p_bus);
+
+    inline void post_message(const dicoplus_global_message_base & p_msg);
+    inline bool output_box_empty(void)const;
+    inline bool message_received(void)const;
+    inline const dicoplus_global_message_base & get_message(void);
+
+    sc_in<bool> m_clk;
   private:
+
+    inline void listen(void);
+    inline void manage_output(void);
+
     dicoplus_global_input_port m_global_input_port;
     dicoplus_global_output_port m_global_output_port;
+    dicoplus_global_message_box m_input_box;
+    dicoplus_global_message_box m_output_box;
   };
 
   //----------------------------------------------------------------------------
   dicoplus_global_port_manager::dicoplus_global_port_manager(sc_module_name p_name):
     sc_module(p_name),
+    m_clk("clk"),
     m_global_input_port("gi_port"),
     m_global_output_port("go_port")
    {
+     SC_METHOD(listen);
+     sensitive << m_clk.pos();
+
+     SC_THREAD(manage_output);
+     sensitive << m_clk.pos();
    }
     //----------------------------------------------------------------------------
     void dicoplus_global_port_manager::bind_input_port(dicoplus_global_bus & p_bus)
@@ -52,6 +74,94 @@ namespace dicoplus
     {
       m_global_output_port(p_bus);
     }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_global_port_manager::listen(void)
+    {
+      std::cout << name() << " listen" << std::endl ;
+      if(m_input_box.is_empty())
+	{
+	  m_global_input_port.ack(true);
+	  if(m_global_input_port.req()==true)
+	    {
+	      std::cout << name() << " : ";
+	      std::cout << "Receive message @" << sc_time_stamp() << std::endl ;
+	      std::cout << "Data : " << m_global_input_port.data() << std::endl;
+	      const dicoplus_global_message_base & l_message = *dicoplus_global_message_factory::decode_message(m_global_input_port.cmd(),
+														m_global_input_port.data());
+	      m_input_box.set_message(l_message);
+	    }
+	}
+      else
+	{
+	  m_global_input_port.ack(false);
+	}
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_global_port_manager::manage_output(void)
+    {
+      std::cout << name() << " : start output port manager" << std::endl ;
+      while(1)
+	{
+	  if(!m_output_box.is_empty())
+	    {
+	      std::cout << name() << " : " ;
+	      std::cout << "Send message @" << sc_time_stamp() << std::endl ;            
+	      const dicoplus_global_message_base & l_message = m_output_box.get_message();
+	      // Write message content on port
+	      m_global_output_port.cmd(l_message.get_cmd());
+	      m_global_output_port.data(l_message.get_data());
+	      delete(&l_message);
+	      
+	      // Indicate that message is ready to be sent
+	      m_global_output_port.req(true);
+	      
+	      // waiting for acknowledge
+	      while(false == m_global_output_port.ack());
+		{
+		  wait();
+		}
+	      std::cout << name() << " : ";
+	      std::cout << "Acknowledge received @" << sc_time_stamp() << std::endl ;            
+	    }
+	  else
+	    {
+	      m_global_output_port.req(false);
+	      wait();
+	    }
+
+	}
+    }
+
+    //--------------------------------------------------------------------------
+    void dicoplus_global_port_manager::post_message(const dicoplus_global_message_base & p_msg)
+    {
+      if(!m_output_box.is_empty())
+	{
+	  quicky_exception::quicky_logic_exception(std::string(name())+" : try to post a message wherease output box is not empty",__LINE__,__FILE__);
+	}
+      m_output_box.set_message(p_msg);
+    }
+
+    //--------------------------------------------------------------------------
+    bool dicoplus_global_port_manager::output_box_empty(void)const
+    {
+      return m_output_box.is_empty();
+    }
+
+    //--------------------------------------------------------------------------
+    bool dicoplus_global_port_manager::message_received(void)const
+    {
+      return !m_input_box.is_empty();
+    }
+
+    //--------------------------------------------------------------------------
+    const dicoplus_global_message_base & dicoplus_global_port_manager::get_message(void)
+      {
+	return m_input_box.get_message();
+      }
+
 }
 #endif // _DICOPLUS_GLOBAL_PORT_MANAGER_H_
 //EOF

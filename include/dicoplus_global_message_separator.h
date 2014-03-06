@@ -1,5 +1,5 @@
 /*    This file is part of dicoplus
-      The aim of this software is to solvde dicoplus game
+      The aim of this software is to solve dicoplus game
       Copyright (C) 2014  Julien Thevenon ( julien_thevenon at yahoo.fr )
 
       This program is free software: you can redistribute it and/or modify
@@ -15,33 +15,32 @@
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#ifndef _DICOPLUS_GLOBAL_BUS_H_
-#define _DICOPLUS_GLOBAL_BUS_H_
+#ifndef _DICOPLUS_GLOBAL_MESSAGE_SEPARATOR_H_
+#define _DICOPLUS_GLOBAL_MESSAGE_SEPARATOR_H_
 
-#include "systemc.h"
-#include "dicoplus_types.h"
-#include <string>
+#include "dicoplus_global_message_base.h"
+#include "dicoplus_global_message_analyzer_if.h"
 
 namespace dicoplus
 {
-  class dicoplus_global_bus
+  class dicoplus_global_message_separator: public dicoplus_global_message_base
   {
   public:
-    inline dicoplus_global_bus(const std::string & p_name);
-    sc_signal<bool> m_req;
-    sc_signal<bool> m_ack;
-    sc_signal<typename dicoplus_types::t_global_cmd_type> m_cmd;
-    sc_signal<typename dicoplus_types::t_global_data_type> m_data;
+    inline dicoplus_global_message_separator(void);
+    inline void be_treated(dicoplus_global_message_analyzer_if & p_analyzer)const;
   private:
   };
 
   //----------------------------------------------------------------------------
-  dicoplus_global_bus::dicoplus_global_bus(const std::string & p_name):
-    m_req((p_name+"_req").c_str()),
-    m_ack((p_name+"_ack").c_str()),
-    m_cmd((p_name+"_cmd").c_str()),
-    m_data((p_name+"_data").c_str())
+  dicoplus_global_message_separator::dicoplus_global_message_separator(void):
+    dicoplus_global_message_base(dicoplus_global_message_base::SEPARATOR,0)
     {
     }
+  //----------------------------------------------------------------------------
+    void dicoplus_global_message_separator::be_treated(dicoplus_global_message_analyzer_if & p_analyzer)const
+    {
+      p_analyzer.treat(*this);
+    }
 }
-#endif // _DICOPLUS_GLOBAL_BUS_H_
+#endif // _DICOPLUS_GLOBAL_MESSAGE_SEPARATOR_H_
+//EOF
