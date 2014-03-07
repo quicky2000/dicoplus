@@ -22,10 +22,10 @@
 #include "dicoplus_global_port_manager.h"
 #include "dicoplus_global_port_binding_if.h"
 #include "cell_listener_if.h"
-
+#include "dicoplus_global_message_analyzer_if.h"
 namespace dicoplus
 {
-  class dicoplus_cell:public sc_module, public dicoplus_global_port_binding_if
+  class dicoplus_cell:public sc_module, public dicoplus_global_port_binding_if,public dicoplus_global_message_analyzer_if
   {
   public:
     SC_HAS_PROCESS(dicoplus_cell);
@@ -36,11 +36,15 @@ namespace dicoplus
     inline void bind_output_port(dicoplus_global_bus & p_bus);
     // End of methods inherited from dicoplus_global_port_binding_if
 
+    // Methods inherited from dicoplus_global_message_analyzer_if
+    void treat(const dicoplus_global_message_char & p_message);
+    void treat(const dicoplus_global_message_separator & p_message);
+    // End of methods inherited from dicoplus_global_message_analyzer_if
+
     inline void set_listener(cell_listener_if & p_listener);
 
     sc_in<bool> m_clk;
   private:
-    void run(void);
 
     dicoplus_global_port_manager m_global_port_manager;
     cell_listener_if * m_listener;
@@ -50,13 +54,10 @@ namespace dicoplus
   dicoplus_cell::dicoplus_cell(sc_module_name name):
     sc_module(name),
     m_clk("clk"),
-    m_global_port_manager("global_port_manager"),
+    m_global_port_manager("global_port_manager",*this),
     m_listener(NULL)
       {
 	m_global_port_manager.m_clk(m_clk);
-
-	SC_THREAD(run);
-	sensitive << m_clk.pos();
       }
 
   //----------------------------------------------------------------------------
@@ -78,18 +79,18 @@ namespace dicoplus
     }
 
     //----------------------------------------------------------------------------
-    void dicoplus_cell::run(void)
+    void dicoplus_cell::treat(const dicoplus_global_message_char & p_message)
     {
-      while(1)
-	{
-	  if(m_global_port_manager.message_received())
-	    {
-	      std::cout << name() << " : Reading message" << std::endl ;
-	      const dicoplus_global_message_base & l_msg = m_global_port_manager.get_message();
-	    }
-	  wait();
-	}
+      std::cout << name() << " : Treat char message @ " << sc_time_stamp() << std::endl ;
+      if(m_listener) m_listener->set_content(p_message.get_data().to_uint());
     }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_cell::treat(const dicoplus_global_message_separator & p_message)
+    {
+      std::cout << name() << " : Treat separator message @ " << sc_time_stamp() << std::endl ;
+    }
+
   
 }
 #endif // _DICOPLUS_CELL_H_

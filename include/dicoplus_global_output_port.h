@@ -38,7 +38,6 @@ namespace dicoplus
     sc_out<typename dicoplus_types::t_global_cmd_type> m_cmd;
     sc_out<typename dicoplus_types::t_global_data_type> m_data;
   };
-
   //----------------------------------------------------------------------------
   void dicoplus_global_output_port::operator () (dicoplus_global_bus  & p_bus)
   {

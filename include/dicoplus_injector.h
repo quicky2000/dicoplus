@@ -21,10 +21,11 @@
 #include "systemc.h"
 #include "dicoplus_global_port_manager.h"
 #include "dicoplus_global_port_binding_if.h"
+#include "dicoplus_global_message_analyzer_if.h"
 
 namespace dicoplus
 {
-  class dicoplus_injector:public sc_module, public dicoplus_global_port_binding_if
+  class dicoplus_injector:public sc_module, public dicoplus_global_port_binding_if,public dicoplus_global_message_analyzer_if
   {
   public:
     SC_HAS_PROCESS(dicoplus_injector);
@@ -35,6 +36,10 @@ namespace dicoplus
     inline void bind_output_port(dicoplus_global_bus & p_bus);
     // End of methods inherited from dicoplus_global_port_binding_if
 
+    // Methods inherited from dicoplus_global_message_analyzer_if
+    void treat(const dicoplus_global_message_char & p_message);
+    void treat(const dicoplus_global_message_separator & p_message);
+    // End of methods inherited from dicoplus_global_message_analyzer_if
     sc_in<bool> m_clk;
   private:
     void run(void);
@@ -46,7 +51,7 @@ namespace dicoplus
   dicoplus_injector::dicoplus_injector(sc_module_name name):
     sc_module(name),
     m_clk("clk"),
-    m_global_port_manager("global_port_manager")
+    m_global_port_manager("global_port_manager",*this)
       {
 	m_global_port_manager.m_clk(m_clk);
 
@@ -70,19 +75,43 @@ namespace dicoplus
     void dicoplus_injector::run(void)
     {
       std::cout << "Injector starting !" << std::endl ;		       
+      if(m_global_port_manager.output_box_empty())
+	{
 	  m_global_port_manager.post_message(*new dicoplus_global_message_char(1));
-	  wait();
+	}
+      wait();
+      if(m_global_port_manager.output_box_empty())
+	{
 	  m_global_port_manager.post_message(*new dicoplus_global_message_char(2));
-	  wait();
+	}
+      wait();
+      if(m_global_port_manager.output_box_empty())
+	{
 	  m_global_port_manager.post_message(*new dicoplus_global_message_char(3));
-	  wait();
+	}
+      wait();
+      if(m_global_port_manager.output_box_empty())
+	{
 	  m_global_port_manager.post_message(*new dicoplus_global_message_char(4));
-	  wait();
-	  wait();
-	  wait();
-	  sc_stop();
+	}
+      wait();
+      wait();
+      wait();
+      sc_stop();
     }
-  
+    
+    //----------------------------------------------------------------------------
+    void dicoplus_injector::treat(const dicoplus_global_message_char & p_message)
+    {
+      std::cout << name() << " : Treat char message @ " << sc_time_stamp() << std::endl ;
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_injector::treat(const dicoplus_global_message_separator & p_message)
+    {
+      std::cout << name() << " : Treat separator message @ " << sc_time_stamp() << std::endl ;
+    }
+
 }
 #endif // _DICOPLUS_INJECTOR_H_
 //EOF
