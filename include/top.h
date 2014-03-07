@@ -15,23 +15,27 @@ namespace dicoplus
   public:
     SC_HAS_PROCESS(top);
     inline top(sc_module_name name,
-               const std::string & p_config_file_name);
+               const std::string & p_config_file_name,
+	       const uint32_t & p_refresh_delay);
   private:
     inline void refresh_GUI(void);
     sc_clock m_clk;
     dicoplus m_dicoplus;
     synoptic::synoptic m_synoptic;
     dicoplus_synoptic_grid m_grid;
+    const uint32_t m_refresh_delay;
   };
 
   //------------------------------------------------------------------------------
   top::top(sc_module_name name,
-	   const std::string & p_config_file_name):
+	   const std::string & p_config_file_name,
+	   const uint32_t & p_refresh_delay):
     sc_module(name),
     m_clk("clk",10,SC_NS,0.5),
     m_dicoplus("dicoplus",p_config_file_name),
     m_synoptic(1550,850),
-    m_grid(m_synoptic,"grid",m_dicoplus.get_width(),m_dicoplus.get_height())
+    m_grid(m_synoptic,"grid",m_dicoplus.get_width(),m_dicoplus.get_height()),
+    m_refresh_delay(p_refresh_delay)
     {
       // Bind clock
       m_dicoplus.m_clk(m_clk);
@@ -60,6 +64,7 @@ namespace dicoplus
     void top::refresh_GUI(void)
     {
       m_synoptic.refresh();
+      sleep(m_refresh_delay);
     }
     
 }

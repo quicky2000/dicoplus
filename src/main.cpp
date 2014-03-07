@@ -29,12 +29,16 @@ int sc_main(int argc,char ** argv)
       parameter_manager::parameter_manager l_param_manager("dicoplus.exe","--",1);
       parameter_if l_input_file("input_file",false);
       l_param_manager.add(l_input_file);
+      parameter_if l_refresh_delay("refresh_delay",true);
+      l_param_manager.add(l_refresh_delay);
 
       // Treating parameters
       l_param_manager.treat_parameters(argc,argv);
 
+      if(!l_refresh_delay.value_set()) l_refresh_delay.set_text_value("1");
+
       dicoplus::static_manager l_static_manager;
-      dicoplus::top l_top("top",l_input_file.get_value<std::string>());
+      dicoplus::top l_top("top",l_input_file.get_value<std::string>(),l_refresh_delay.get_value<uint32_t>());
       
       sc_start();
     }
