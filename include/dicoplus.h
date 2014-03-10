@@ -182,10 +182,8 @@ namespace dicoplus
 
 
 	// Instantiate Cell grid
-	dicoplus_global_port_binding_if * l_previous_global = &m_injector;
 	unsigned int l_allocated_width = 0;
 	unsigned int l_allocated_height = 0;
-	std::string l_previous_name = "Injector";
 	std::string l_cell_base_name = "Cell_";
 	try
 	  {
@@ -222,15 +220,6 @@ namespace dicoplus
 		    dicoplus_cell * l_cell = new dicoplus_cell(l_cell_name.c_str());
 		    l_cell->m_clk(m_clk_sig);
 
-		    // Creating bus
-		    std::string l_bus_name = "FROM_" + l_previous_name +"_TO_" + l_cell_name;
-		    dicoplus_global_bus * l_bus = new dicoplus_global_bus(l_bus_name.c_str());
-		      // Binding with previous cell
-		    l_previous_global->bind_output_port(*l_bus);
-		    l_cell->bind_input_port(*l_bus);
-
-		    l_previous_global = l_cell;
-		    l_previous_name = l_cell_name;
 		    // Storing cell in array for deletion
 		    m_cells[l_allocated_width][l_allocated_height] = l_cell;
 		  }
@@ -259,6 +248,32 @@ namespace dicoplus
 	    delete[] m_global_buses[l_allocated_width];
 	    delete[] m_global_buses;
 	  }
+
+ 	std::string l_previous_name = "Injector";
+ 	dicoplus_global_port_binding_if * l_previous_global = &m_injector;
+        for(unsigned int l_index_height = 0; l_index_height < m_height ; ++l_index_height)
+          {
+            std::stringstream l_height_stream;
+            l_height_stream << l_index_height;
+            for (unsigned int l_index_width = 0; l_index_width < m_width ; ++l_index_width) 
+              {
+		// Complete cell name
+		std::stringstream l_width_stream;
+		l_width_stream << l_index_width;
+                std::string l_cell_name = l_cell_base_name + l_width_stream.str()+"_"+l_height_stream.str();
+                dicoplus_cell * l_cell = m_cells[l_index_width][l_index_height];
+
+                // Creating bus
+                std::string l_bus_name = "FROM_" + l_previous_name +"_TO_" + l_cell_name;
+                dicoplus_global_bus * l_bus = new dicoplus_global_bus(l_bus_name.c_str());
+                // Binding with previous cell
+                l_previous_global->bind_output_port(*l_bus);
+                l_cell->bind_input_port(*l_bus);
+
+                l_previous_global = l_cell;
+                l_previous_name = l_cell_name;
+             }
+          }
 
 	// Bind injector
 	m_injector.m_clk(m_clk_sig);
