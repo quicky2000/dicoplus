@@ -45,9 +45,11 @@ namespace dicoplus
 
     sc_in<bool> m_clk;
   private:
-
+    typedef enum {UNINITIALIZED=0,INITIALIZED,READY2START} t_FSM_state;
     dicoplus_global_port_manager m_global_port_manager;
     cell_listener_if * m_listener;
+    dicoplus_types::t_global_data_type m_content;
+    t_FSM_state m_internal_state;
   };
 
   //----------------------------------------------------------------------------
@@ -55,7 +57,9 @@ namespace dicoplus
     sc_module(name),
     m_clk("clk"),
     m_global_port_manager("global_port_manager",*this),
-    m_listener(NULL)
+    m_listener(NULL),
+    m_content(0),
+    m_internal_state(UNINITIALIZED)
       {
 	m_global_port_manager.m_clk(m_clk);
       }
@@ -82,7 +86,22 @@ namespace dicoplus
     void dicoplus_cell::treat(const dicoplus_global_message_char & p_message)
     {
       std::cout << name() << " : Treat char message @ " << sc_time_stamp() << std::endl ;
-      if(m_listener) m_listener->set_content(p_message.get_data().to_uint());
+      switch(m_internal_state)
+	{
+	case UNINITIALIZED:
+	  {
+	    m_content = p_message.get_data();
+	    m_internal_state = INITIALIZED;
+	    if(m_listener) m_listener->set_content(p_message.get_data().to_uint());
+	  }
+	  break;
+	case INITIALIZED:
+	  {
+	    m_global_port_manager.post_message(p_message);
+	  }
+	default:
+	  break;
+	}
     }
 
     //----------------------------------------------------------------------------
