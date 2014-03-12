@@ -22,6 +22,7 @@
 #include "dicoplus_global_port_manager.h"
 #include "dicoplus_global_port_binding_if.h"
 #include "dicoplus_global_message_analyzer_if.h"
+#include <queue>
 
 namespace dicoplus
 {
@@ -40,18 +41,36 @@ namespace dicoplus
     void treat(const dicoplus_global_message_char & p_message);
     void treat(const dicoplus_global_message_separator & p_message);
     // End of methods inherited from dicoplus_global_message_analyzer_if
+
+    inline void set_grid_content(std::queue<dicoplus_types::t_global_data_type> & p_content);
+
     sc_in<bool> m_clk;
+    inline ~dicoplus_injector(void);
   private:
     void run(void);
 
     dicoplus_global_port_manager m_global_port_manager;
+    std::queue<dicoplus_types::t_global_data_type> * m_grid_content;
   };
 
+  //----------------------------------------------------------------------------
+  void dicoplus_injector::set_grid_content(std::queue<dicoplus_types::t_global_data_type> & p_content)
+  {
+    m_grid_content = & p_content;
+  }
+
+  //----------------------------------------------------------------------------
+  dicoplus_injector::~dicoplus_injector(void)
+    {
+      delete m_grid_content;
+    }
+  
   //----------------------------------------------------------------------------
   dicoplus_injector::dicoplus_injector(sc_module_name name):
     sc_module(name),
     m_clk("clk"),
-    m_global_port_manager("global_port_manager",*this)
+    m_global_port_manager("global_port_manager",*this),
+    m_grid_content(NULL)
       {
 	m_global_port_manager.m_clk(m_clk);
 
@@ -74,7 +93,19 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     void dicoplus_injector::run(void)
     {
-      std::cout << "Injector starting !" << std::endl ;		       
+      std::cout << "Injector starting !" << std::endl ;
+      if(NULL == m_grid_content) throw quicky_exception::quicky_logic_exception("Grid content has not been loaded",__LINE__,__FILE__);
+      while(m_grid_content->size())
+	{
+	  if(m_global_port_manager.output_box_empty())
+	    {
+	      m_global_port_manager.post_message(*new dicoplus_global_message_char(m_grid_content->front()));
+	      m_grid_content->pop();
+	    }
+	  wait();
+	}
+
+#if 0
       if(m_global_port_manager.output_box_empty())
 	{
 	  m_global_port_manager.post_message(*new dicoplus_global_message_char(1));
@@ -94,9 +125,11 @@ namespace dicoplus
 	{
 	  m_global_port_manager.post_message(*new dicoplus_global_message_char(4));
 	}
-      wait();
-      wait();
-      wait();
+#endif
+      for(uint l_index = 0 ; l_index < 20 ; ++l_index)
+	{
+	  wait();
+	}
       sc_stop();
     }
     

@@ -24,6 +24,7 @@
 #include "dicoplus_cell.h"
 #include "dicoplus_global_bus.h"
 #include "dicoplus_injector.h"
+#include "dicoplus_char.h"
 #include "systemc.h"
 #include <cstring>
 #include <iostream>
@@ -31,6 +32,7 @@
 #include <sstream>
 #include <vector>
 #include <inttypes.h>
+#include <queue>
 
 namespace dicoplus
 {
@@ -100,6 +102,7 @@ namespace dicoplus
             throw quicky_exception::quicky_logic_exception("dom_parser : \"" + l_error_msg+ "\" on line " + l_line_number.str() + " when parsing XML column " + l_column_number.str(),__LINE__,__FILE__);
           }
 
+	std::queue<dicoplus_types::t_global_data_type> & l_grid_content = * new std::queue<dicoplus_types::t_global_data_type>();
 
         // Extract data from XML tree
         int l_nb_child_object = l_node.nChildNode();
@@ -145,7 +148,17 @@ namespace dicoplus
                       {
                         m_width = l_size;
                       }
+
                   }
+		// Extract line content and convert it to internal representation of dicoplus
+		std::string::const_iterator l_line_iter = l_key.begin();
+		std::string::const_iterator l_line_iter_end = l_key.end();
+		while(l_line_iter != l_line_iter_end)
+		  {
+		    uint32_t l_cp = utf8::next(l_line_iter,l_line_iter_end);
+		    l_grid_content.push(dicoplus_char::get_internal_code(l_cp));
+		  }
+
               }
             else
               {
@@ -180,6 +193,7 @@ namespace dicoplus
         std::cout << std::endl ;
 
 
+	m_injector.set_grid_content(l_grid_content);
 
 	// Instantiate Cell grid
 	unsigned int l_allocated_width = 0;
