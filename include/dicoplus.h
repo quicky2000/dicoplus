@@ -283,7 +283,7 @@ namespace dicoplus
                 // Binding with previous cell
                 l_previous_global->bind_output_port(*l_bus);
                 l_cell->bind_input_port(*l_bus);
-
+		m_global_buses[l_index_width][l_index_height] = l_bus;
                 l_previous_global = l_cell;
                 l_previous_name = l_cell_name;
              }
@@ -294,6 +294,10 @@ namespace dicoplus
 	m_injector_global_bus = new dicoplus_global_bus("FROM_" + l_previous_name +"_TO_injector");
 	l_previous_global->bind_output_port(*m_injector_global_bus);
 	m_injector.bind_input_port(*m_injector_global_bus);
+
+	assert(m_height >= 1);
+	m_injector.m_global_req(m_global_buses[0][1]->m_req);
+	m_injector.m_global_ack(m_global_buses[0][1]->m_ack);
 
         SC_METHOD(clk_management);
         sensitive << m_clk;

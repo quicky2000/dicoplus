@@ -44,13 +44,18 @@ namespace dicoplus
 
     inline void set_grid_content(std::queue<dicoplus_types::t_global_data_type> & p_content);
 
-    sc_in<bool> m_clk;
     inline ~dicoplus_injector(void);
+
+    sc_in<bool> m_clk;
+    sc_in<bool> m_global_req;
+    sc_in<bool> m_global_ack;
   private:
     void run(void);
+    inline void listen_char_propagation(void);
 
     dicoplus_global_port_manager m_global_port_manager;
     std::queue<dicoplus_types::t_global_data_type> * m_grid_content;
+    bool m_ready2send_new_char;
   };
 
   //----------------------------------------------------------------------------
@@ -69,14 +74,31 @@ namespace dicoplus
   dicoplus_injector::dicoplus_injector(sc_module_name name):
     sc_module(name),
     m_clk("clk"),
+    m_global_req("global_req"),
+    m_global_ack("global_ack"),
     m_global_port_manager("global_port_manager",*this),
-    m_grid_content(NULL)
+    m_grid_content(NULL),
+    m_ready2send_new_char(false)
       {
 	m_global_port_manager.m_clk(m_clk);
 
 	SC_THREAD(run);
 	sensitive << m_clk.pos();	
+
+	SC_METHOD(listen_char_propagation);
+	sensitive << m_clk.pos();
       }
+
+
+    //----------------------------------------------------------------------------
+    void dicoplus_injector::listen_char_propagation(void)
+    {
+      if(m_global_req.read() && m_global_ack.read())
+	{
+	  std::cout << name() << " : Ready to send a new char" << std::endl ;
+	  m_ready2send_new_char = true;
+	}
+    }
 
     //----------------------------------------------------------------------------
     void dicoplus_injector::bind_input_port(dicoplus_global_bus & p_bus)
