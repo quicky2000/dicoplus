@@ -25,6 +25,7 @@
 #include "dicoplus_synoptic_port.h"
 #include "cell_listener_if.h"
 #include <inttypes.h>
+#include <map>
 
 namespace dicoplus
 {
@@ -40,15 +41,18 @@ namespace dicoplus
 
     // Methods inherited from cell_listener_if
     inline void set_content(const uint32_t & p_content);
-    //End of methods inherited from cell_listener_if
+    inline void set_state(const dicoplus_types::t_cell_FSM_state & p_state);
+   //End of methods inherited from cell_listener_if
 
     inline virtual ~dicoplus_synoptic_cell(void){}
   private:
+    inline void set_state_(const dicoplus_types::t_cell_FSM_state & p_state);
     synoptic::color_zone m_up_border;
     synoptic::color_zone m_right_border;
     synoptic::color_zone m_down_border;
     synoptic::color_zone m_left_border;
     dicoplus_synoptic_char m_char_display;
+    dicoplus_synoptic_char m_state_display;
     dicoplus_synoptic_port m_up_req_port;
     dicoplus_synoptic_port m_up_gnt_port;
     dicoplus_synoptic_port m_down_req_port;
@@ -69,6 +73,7 @@ namespace dicoplus
     static const uint32_t m_req_gnt_dim;
     static const uint32_t m_border_padding;
     static const uint32_t m_middle_dim;
+    static std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> > m_cell_state_representation;
   };
 
   //----------------------------------------------------------------------------
@@ -76,6 +81,21 @@ namespace dicoplus
   {
     m_char_display.set_content(p_content);
     m_char_display.paint();
+  }
+  //----------------------------------------------------------------------------
+  void dicoplus_synoptic_cell::set_state_(const dicoplus_types::t_cell_FSM_state & p_state)
+  {
+    std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::const_iterator l_iter = m_cell_state_representation.find(p_state);
+    if(m_cell_state_representation.end() == l_iter) throw quicky_exception::quicky_logic_exception("No synoptic representation for state \""+dicoplus_types::cell_FSM_state2string(p_state)+"\"",__LINE__,__FILE__);
+    m_state_display.set_content(l_iter->second.first);
+    m_state_display.set_char_color(l_iter->second.second);
+  }
+
+  //----------------------------------------------------------------------------
+  void dicoplus_synoptic_cell::set_state(const dicoplus_types::t_cell_FSM_state & p_state)
+  {
+    set_state_(p_state);
+    m_state_display.paint();
   }
 
   //----------------------------------------------------------------------------
@@ -100,6 +120,7 @@ namespace dicoplus
     m_down_border(p_owner,p_name + "_down_border",m_width,1,255,255,255),
     m_left_border(p_owner,p_name + "_left_border",1,m_height - 2,255,255,255),
     m_char_display(p_owner,p_name + "_char"),
+    m_state_display(p_owner,p_name + "_state"),
     m_up_req_port(p_owner,p_name+"_up_req_port",dicoplus_synoptic_port::UP),
     m_up_gnt_port(p_owner,p_name+"_up_gnt_port",dicoplus_synoptic_port::UP),
     m_down_req_port(p_owner,p_name+"_down_req_port",dicoplus_synoptic_port::DOWN),
@@ -113,6 +134,13 @@ namespace dicoplus
     m_right_req_port(p_owner,p_name+"_right_req_port",dicoplus_synoptic_port::RIGHT),
     m_right_gnt_port(p_owner,p_name+"_right_gnt_port",dicoplus_synoptic_port::RIGHT)
     {
+
+      if(!m_cell_state_representation.size())
+        {
+          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::UNINITIALIZED,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('U'),p_owner.get_color_code(0xFF,0,0))));
+          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::INITIALIZED,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('I'),p_owner.get_color_code(0xFF,0xFF,0xFF))));
+        }
+
       // Adding borders
       add_zone(0,0,m_up_border);
       add_zone(m_width - 1,1,m_right_border);
@@ -121,6 +149,9 @@ namespace dicoplus
 
       // Adding char representation
       add_zone(4,5,m_char_display);
+
+      // Adding state representation
+      add_zone(10,5,m_state_display);
 
       // Adding ports
       uint32_t l_x_up_down_left_port = 5;
@@ -147,6 +178,8 @@ namespace dicoplus
       add_zone(l_x_right_ports,l_y_ggnt_ports,m_right_ggnt_port);
       add_zone(l_x_right_ports,l_y_req_ports,m_right_req_port);
       add_zone(l_x_right_ports,l_y_gnt_ports,m_right_gnt_port);
+
+      set_state_(dicoplus_types::UNINITIALIZED);
 
     }
   //----------------------------------------------------------------------------

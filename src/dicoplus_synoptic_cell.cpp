@@ -25,6 +25,7 @@ namespace dicoplus
   const uint32_t dicoplus_synoptic_cell::m_req_gnt_dim = 3;
   const uint32_t dicoplus_synoptic_cell::m_border_padding = 3;
   const uint32_t dicoplus_synoptic_cell::m_middle_dim = 16;
+  std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> > dicoplus_synoptic_cell::m_cell_state_representation;
 }
 
 //EOF

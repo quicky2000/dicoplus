@@ -19,6 +19,7 @@
 #ifndef CELL_LISTENER_IF_H
 #define CELL_LISTENER_IF_H
 
+#include "dicoplus_types.h"
 #include <inttypes.h>
 
 namespace dicoplus
@@ -27,6 +28,7 @@ namespace dicoplus
   {
   public:
     virtual void set_content(const uint32_t & p_content)=0;
+    virtual void set_state(const dicoplus_types::t_cell_FSM_state & p_state)=0;
     inline virtual ~cell_listener_if(void){}
   private:
   };

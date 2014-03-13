@@ -19,6 +19,7 @@
 #define _DICOPLUS_TYPES_H_
 
 #include "dicoplus_configuration.h"
+#include "systemc.h"
 
 namespace dicoplus
 {
@@ -27,8 +28,27 @@ namespace dicoplus
   public:
       typedef sc_bv<dicoplus_configuration::m_global_cmd_nb_bits > t_global_cmd_type;
       typedef sc_bv<dicoplus_configuration::m_characters_nb_bits> t_global_data_type;
+      typedef enum {UNINITIALIZED=0,INITIALIZED,READY2START} t_cell_FSM_state;
+      inline static const std::string cell_FSM_state2string(const t_cell_FSM_state & p_state);
   private:
   };
+
+  //----------------------------------------------------------------------------
+  const std::string dicoplus_types::cell_FSM_state2string(const t_cell_FSM_state & p_state)
+    {
+      switch(p_state)
+        {
+        case UNINITIALIZED:
+          return "UNINITIALIZED";
+          break;
+        case INITIALIZED:
+          return "INITIALIZED";
+          break;
+        default:
+          throw quicky_exception::quicky_logic_exception("No string representation for cell FSM state "+p_state,__LINE__,__FILE__);
+          break;
+        }
+    }
 }
 #endif // _DICOPLUS_TYPES_H_
 //EOF

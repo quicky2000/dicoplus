@@ -37,19 +37,21 @@ namespace dicoplus
     // End of methods inherited from dicoplus_global_port_binding_if
 
     // Methods inherited from dicoplus_global_message_analyzer_if
-    void treat(const dicoplus_global_message_char & p_message);
-    void treat(const dicoplus_global_message_separator & p_message);
+    inline void treat(const dicoplus_global_message_char & p_message);
+    inline void treat(const dicoplus_global_message_separator & p_message);
     // End of methods inherited from dicoplus_global_message_analyzer_if
 
     inline void set_listener(cell_listener_if & p_listener);
 
     sc_in<bool> m_clk;
   private:
-    typedef enum {UNINITIALIZED=0,INITIALIZED,READY2START} t_FSM_state;
+    inline void set_internal_state(const dicoplus_types::t_cell_FSM_state & p_state);
+
+
     dicoplus_global_port_manager m_global_port_manager;
     cell_listener_if * m_listener;
     dicoplus_types::t_global_data_type m_content;
-    t_FSM_state m_internal_state;
+    dicoplus_types::t_cell_FSM_state m_internal_state;
   };
 
   //----------------------------------------------------------------------------
@@ -59,11 +61,17 @@ namespace dicoplus
     m_global_port_manager("global_port_manager",*this),
     m_listener(NULL),
     m_content(0),
-    m_internal_state(UNINITIALIZED)
+    m_internal_state(dicoplus_types::UNINITIALIZED)
       {
 	m_global_port_manager.m_clk(m_clk);
       }
 
+  //----------------------------------------------------------------------------
+    void dicoplus_cell::set_internal_state(const dicoplus_types::t_cell_FSM_state & p_state)
+    {
+      m_internal_state = p_state;
+      if(m_listener) m_listener->set_state(m_internal_state);
+   }
   //----------------------------------------------------------------------------
     void dicoplus_cell::set_listener(cell_listener_if & p_listener)
     {
@@ -85,17 +93,19 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     void dicoplus_cell::treat(const dicoplus_global_message_char & p_message)
     {
+#ifdef DEBUG_DICOPLUS_CELL
       std::cout << name() << " : Treat char message @ " << sc_time_stamp() << std::endl ;
+#endif // DEBUG_DICOPLUS_CELL
       switch(m_internal_state)
 	{
-	case UNINITIALIZED:
+	case dicoplus_types::UNINITIALIZED:
 	  {
 	    m_content = p_message.get_data();
-	    m_internal_state = INITIALIZED;
+	    set_internal_state(dicoplus_types::INITIALIZED);
 	    if(m_listener) m_listener->set_content(p_message.get_data().to_uint());
 	  }
 	  break;
-	case INITIALIZED:
+	case dicoplus_types::INITIALIZED:
 	  {
 	    m_global_port_manager.post_message(p_message);
 	  }
@@ -107,7 +117,9 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     void dicoplus_cell::treat(const dicoplus_global_message_separator & p_message)
     {
+#ifdef DEBUG_DICOPLUS_CELL
       std::cout << name() << " : Treat separator message @ " << sc_time_stamp() << std::endl ;
+#endif // DEBUG_DICOPLUS_CELL
     }
 
   
