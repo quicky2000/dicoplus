@@ -23,6 +23,7 @@
 #include "utf8.h"
 #include "dicoplus_cell.h"
 #include "dicoplus_global_bus.h"
+#include "dicoplus_global_bus_probe.h"
 #include "dicoplus_injector.h"
 #include "dicoplus_char.h"
 #include "systemc.h"
@@ -50,6 +51,9 @@ namespace dicoplus
     inline void attach_cell_listener(const uint32_t & p_x,
 				     const uint32_t & p_y,
 				     cell_listener_if & p_listener);
+    inline void attach_global_bus_listener(const uint32_t & p_x,
+                                           const uint32_t & p_y,
+                                           dicoplus_global_message_analyzer_if & p_listener);
   private:
     inline void clk_management(void);
 
@@ -61,6 +65,7 @@ namespace dicoplus
     dicoplus_cell *** m_cells;
     dicoplus_global_bus *** m_global_buses;
     dicoplus_global_bus * m_injector_global_bus;
+    std::vector<dicoplus_global_bus_probe*> m_global_bus_probes;
   };
 
   //----------------------------------------------------------------------------
@@ -280,7 +285,8 @@ namespace dicoplus
                 // Creating bus
                 std::string l_bus_name = "FROM_" + l_previous_name +"_TO_" + l_cell_name;
                 dicoplus_global_bus * l_bus = new dicoplus_global_bus(l_bus_name.c_str());
-                // Binding with previous cell
+  
+              // Binding with previous cell
                 l_previous_global->bind_output_port(*l_bus);
                 l_cell->bind_input_port(*l_bus);
 		m_global_buses[l_index_width][l_index_height] = l_bus;
@@ -319,6 +325,15 @@ namespace dicoplus
         delete[] m_cells;
         delete[] m_global_buses;
 	delete m_injector_global_bus;
+    
+        for(std::vector<dicoplus_global_bus_probe*>::iterator l_iter = m_global_bus_probes.begin();
+            l_iter != m_global_bus_probes.end();
+            ++l_iter)
+          {
+            delete *l_iter;
+          }
+
+        
       }
 
     //--------------------------------------------------------------------------
@@ -340,6 +355,34 @@ namespace dicoplus
 	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
 	}
       m_cells[p_x][p_y]->set_listener(p_listener);
+    }
+
+    //--------------------------------------------------------------------------
+    void dicoplus::attach_global_bus_listener(const uint32_t & p_x,
+                                              const uint32_t & p_y,
+                                              dicoplus_global_message_analyzer_if & p_listener)
+    {
+      if(p_x >= m_width)
+	{
+	  std::stringstream l_stream;
+	  l_stream << "Value " << p_x << " >= to dicoplus width " << m_width;
+	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
+	}
+      if(p_y >= m_height)
+	{
+	  std::stringstream l_stream;
+	  l_stream << "Value " << p_y << " >= to dicoplus height " << m_height;
+	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
+	}
+      std::stringstream l_x_str;
+      l_x_str << p_x;
+      std::stringstream l_y_str;
+      l_y_str << p_y;
+      std::string l_probe_name = "probe_bus_from_cell_" + l_x_str.str() + "_" + l_y_str.str();
+      dicoplus_global_bus_probe * l_probe = new dicoplus_global_bus_probe(l_probe_name.c_str(),p_listener);
+      l_probe->operator ()(*m_global_buses[p_x][p_y]);
+      l_probe->m_clock(m_clk_sig);
+      m_global_bus_probes.push_back(l_probe);
     }
 
     //--------------------------------------------------------------------------

@@ -46,6 +46,7 @@ namespace dicoplus
 	  for(uint32_t l_y_index = 0 ; l_y_index < m_dicoplus.get_height() ; ++l_y_index)
 	    {
 	      m_dicoplus.attach_cell_listener(l_x_index,l_y_index,m_grid.get_cell(l_x_index,l_y_index));
+	      m_dicoplus.attach_global_bus_listener(l_x_index,l_y_index,m_grid.get_global_bus(l_x_index,l_y_index));
 	    }
 	}
 
