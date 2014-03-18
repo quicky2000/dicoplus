@@ -32,7 +32,7 @@ namespace dicoplus
     SC_HAS_PROCESS(dicoplus_global_bus_probe);
     inline dicoplus_global_bus_probe(sc_module_name p_name,
 				     dicoplus_global_message_analyzer_if & p_listener);
-    inline void operator () (dicoplus_global_bus  & p_bus);
+    inline void operator () (const dicoplus_global_bus  & p_bus);
     sc_in<bool> m_clock;
   private:
     void run(void);
@@ -62,7 +62,7 @@ namespace dicoplus
     }
 
     //------------------------------------------------------------
-    void dicoplus_global_bus_probe::operator () (dicoplus_global_bus  & p_bus)
+    void dicoplus_global_bus_probe::operator () (const dicoplus_global_bus  & p_bus)
     {
       m_req(p_bus.m_req);
       m_ack(p_bus.m_ack);
