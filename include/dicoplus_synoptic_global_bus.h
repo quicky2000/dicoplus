@@ -1,5 +1,5 @@
 /*    This file is part of dicoplus
-      The aim of this software is to solvde dicoplus game
+      The aim of this software is to solve dicoplus game
       Copyright (C) 2014  Julien Thevenon ( julien_thevenon at yahoo.fr )
 
       This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 #include "dicoplus_synoptic_char.h"
 #include "dicoplus_global_message_analyzer_if.h"
 #include "dicoplus_global_message_char.h"
+#include "synoptic.h"
 
 namespace dicoplus
 {
@@ -38,6 +39,8 @@ namespace dicoplus
     // End of methods inherited from dicoplus_global_message_analyzer_if
   private:
     dicoplus_synoptic_char m_char_display;    
+    static uint32_t m_char_message_color_code;
+    static uint32_t m_separator_message_color_code;
   };
 
   //----------------------------------------------------------------------------
@@ -48,16 +51,27 @@ namespace dicoplus
     m_char_display(p_owner,"char_display")
     {
       add_zone(1,1,m_char_display);
+
+      // Initialisation of color codes
+      if(!m_char_message_color_code)
+	{
+	  m_separator_message_color_code = p_owner.get_color_code(0xFF,0,0);
+	  m_char_message_color_code = p_owner.get_color_code(0,0xFF,0);
+	}
     }
     //----------------------------------------------------------------------------
     void dicoplus_synoptic_global_bus::treat(const dicoplus_global_message_char & p_message)
     {
       m_char_display.set_content(p_message.get_data().to_uint());
+      m_char_display.set_char_color(m_char_message_color_code);
       m_char_display.paint();
     }
     //----------------------------------------------------------------------------
     void dicoplus_synoptic_global_bus::treat(const dicoplus_global_message_separator & p_message)
     {
+      m_char_display.set_content(dicoplus_char::get_internal_code(0xc6));
+      m_char_display.set_char_color(m_separator_message_color_code);
+      m_char_display.paint();
     }
 }
 
