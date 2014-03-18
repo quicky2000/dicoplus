@@ -182,6 +182,7 @@ namespace dicoplus
 	  register_code_point(0xd9); // "Ù"
 	  register_code_point(0xdb); // "Û"
 	  register_code_point(0x178); // Y:
+	  register_code_point(0xc6); // OE:
 	}
       else
 	{

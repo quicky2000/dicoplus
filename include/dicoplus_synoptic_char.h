@@ -103,6 +103,7 @@ namespace dicoplus
 	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xd9), 0x104046318c62e));// Ù
 	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xdb), 0xc9046318c62e)); // Û
 	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0x178), 0x14a0454a21084));// Y:
+	  m_content_representation.insert(std::map<uint32_t,uint64_t>::value_type(dicoplus_char::get_internal_code(0xc6), 0xba5296e5297));// OE
 	}
       else
 	{
