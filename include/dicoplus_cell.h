@@ -120,6 +120,7 @@ namespace dicoplus
 #ifdef DEBUG_DICOPLUS_CELL
       std::cout << name() << " : Treat separator message @ " << sc_time_stamp() << std::endl ;
 #endif // DEBUG_DICOPLUS_CELL
+      m_global_port_manager.post_message(p_message);
     }
 
   
