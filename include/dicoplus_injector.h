@@ -47,6 +47,7 @@ namespace dicoplus
     // End of methods inherited from dicoplus_global_message_analyzer_if
 
     inline void set_grid_content(std::queue<dicoplus_types::t_global_data_type> & p_content);
+    inline void set_word_list(std::vector<dicoplus_types::t_global_data_type> & p_content);
 
     inline void spy_bus(const sc_signal<bool> & p_clk_sig,
 			dicoplus_global_bus  & p_bus);
@@ -76,6 +77,7 @@ namespace dicoplus
     spy_port_listener m_spy_listener;
     dicoplus_global_bus_probe m_spy_probe;
     std::queue<dicoplus_types::t_global_data_type> * m_grid_content;
+    std::vector<dicoplus_types::t_global_data_type> * m_word_list;
     bool m_ready2send_new_char;
   };
 
@@ -111,9 +113,16 @@ namespace dicoplus
   }
 
   //----------------------------------------------------------------------------
+  void dicoplus_injector::set_word_list(std::vector<dicoplus_types::t_global_data_type> & p_content)
+  {
+    m_word_list = & p_content;
+  }
+
+  //----------------------------------------------------------------------------
   dicoplus_injector::~dicoplus_injector(void)
     {
       delete m_grid_content;
+      delete m_word_list;
     }
   
   //----------------------------------------------------------------------------
@@ -124,6 +133,7 @@ namespace dicoplus
     m_spy_listener(*this),
     m_spy_probe("spy_probe",m_spy_listener),
     m_grid_content(NULL),
+    m_word_list(NULL),
     m_ready2send_new_char(false)
       {
 	m_global_port_manager.m_clk(m_clk);
@@ -177,6 +187,28 @@ namespace dicoplus
       while(!m_global_port_manager.output_box_empty())
 	{
 	  wait();
+	}
+
+      if(NULL == m_word_list) throw quicky_exception::quicky_logic_exception("Word list has not been loaded",__LINE__,__FILE__);
+
+      // Sending words
+      for(std::vector<dicoplus_types::t_global_data_type>::const_iterator l_word_iter = m_word_list->begin();
+	  m_word_list->end() != l_word_iter;
+	  ++l_word_iter)
+	{
+	  while(!m_ready2send_new_char)
+	    {
+	      wait();
+	    }
+	  m_ready2send_new_char = false;
+	  if(*l_word_iter != dicoplus_char::get_internal_code(0xc6))
+	    {
+	      m_global_port_manager.post_message(*new dicoplus_global_message_char(*l_word_iter));
+	    }
+	  else
+	    {
+	      m_global_port_manager.post_message(*new dicoplus_global_message_separator());
+	    }
 	}
 
       for(uint l_index = 0 ; l_index < 20 ; ++l_index)

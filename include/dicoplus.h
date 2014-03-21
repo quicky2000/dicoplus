@@ -108,6 +108,7 @@ namespace dicoplus
           }
 
 	std::queue<dicoplus_types::t_global_data_type> & l_grid_content = * new std::queue<dicoplus_types::t_global_data_type>();
+	std::vector<dicoplus_types::t_global_data_type> & l_word_list = * new std::vector<dicoplus_types::t_global_data_type>();
 
         // Extract data from XML tree
         int l_nb_child_object = l_node.nChildNode();
@@ -131,6 +132,25 @@ namespace dicoplus
             if("word" == l_node_type)
               {
                 m_word_list.push_back(l_key_str);
+		
+                std::string l_key = l_key_str;
+                try
+                  {
+                    // Extract word content and convert it to internal representation of dicoplus
+                    std::string::const_iterator l_word_iter = l_key.begin();
+                    std::string::const_iterator l_word_iter_end = l_key.end();
+                    while(l_word_iter != l_word_iter_end)
+                      {
+                        uint32_t l_cp = utf8::next(l_word_iter,l_word_iter_end);
+                        l_word_list.push_back(dicoplus_char::get_internal_code(l_cp));
+                      }			       
+                    // Adding separator ath the end of word
+                    l_word_list.push_back(dicoplus_char::get_internal_code(0xc6));
+                  }
+                catch(quicky_exception::quicky_logic_exception e)
+                  {
+                    throw quicky_exception::quicky_logic_exception("Problem with word \""+l_key+"\" : "+e.what(),__LINE__,__FILE__);
+                  }
               }
             else if("line" == l_node_type)
               {
@@ -156,13 +176,21 @@ namespace dicoplus
 
                   }
 		// Extract line content and convert it to internal representation of dicoplus
-		std::string::const_iterator l_line_iter = l_key.begin();
-		std::string::const_iterator l_line_iter_end = l_key.end();
-		while(l_line_iter != l_line_iter_end)
-		  {
-		    uint32_t l_cp = utf8::next(l_line_iter,l_line_iter_end);
-		    l_grid_content.push(dicoplus_char::get_internal_code(l_cp));
-		  }
+                try
+                  {
+                    std::string::const_iterator l_line_iter = l_key.begin();
+                    std::string::const_iterator l_line_iter_end = l_key.end();
+                    while(l_line_iter != l_line_iter_end)
+                      {
+                        uint32_t l_cp = utf8::next(l_line_iter,l_line_iter_end);
+                        l_grid_content.push(dicoplus_char::get_internal_code(l_cp));
+                      }
+                  }
+                catch(quicky_exception::quicky_logic_exception e)
+                  {
+                    throw quicky_exception::quicky_logic_exception("Problem with line \""+l_key+"\" : "+e.what(),__LINE__,__FILE__);
+                  }
+
               }
             else
               {
@@ -198,6 +226,7 @@ namespace dicoplus
 
 
 	m_injector.set_grid_content(l_grid_content);
+	m_injector.set_word_list(l_word_list);
 
 	// Instantiate Cell grid
 	unsigned int l_allocated_width = 0;
