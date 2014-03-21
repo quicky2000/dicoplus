@@ -53,7 +53,7 @@ namespace dicoplus
 				     cell_listener_if & p_listener);
     inline void attach_global_bus_listener(const uint32_t & p_x,
                                            const uint32_t & p_y,
-                                           dicoplus_global_message_analyzer_if & p_listener);
+                                           dicoplus_global_bus_listener_if & p_listener);
   private:
     inline void clk_management(void);
 
@@ -163,7 +163,6 @@ namespace dicoplus
 		    uint32_t l_cp = utf8::next(l_line_iter,l_line_iter_end);
 		    l_grid_content.push(dicoplus_char::get_internal_code(l_cp));
 		  }
-
               }
             else
               {
@@ -286,13 +285,13 @@ namespace dicoplus
                 std::string l_bus_name = "FROM_" + l_previous_name +"_TO_" + l_cell_name;
                 dicoplus_global_bus * l_bus = new dicoplus_global_bus(l_bus_name.c_str());
   
-              // Binding with previous cell
+                // Binding with previous cell
                 l_previous_global->bind_output_port(*l_bus);
                 l_cell->bind_input_port(*l_bus);
 		m_global_buses[l_index_width][l_index_height] = l_bus;
                 l_previous_global = l_cell;
                 l_previous_name = l_cell_name;
-             }
+              }
           }
 
 	// Bind injector
@@ -301,9 +300,10 @@ namespace dicoplus
 	l_previous_global->bind_output_port(*m_injector_global_bus);
 	m_injector.bind_input_port(*m_injector_global_bus);
 
-	assert(m_height >= 1);
-	m_injector.m_global_req(m_global_buses[0][1]->m_req);
-	m_injector.m_global_ack(m_global_buses[0][1]->m_ack);
+	if(m_height < 1) throw quicky_exception::quicky_logic_exception("Grid height is less than 1 !",__LINE__,__FILE__);
+
+	// Bind spy bus of injector
+	m_injector.spy_bus(m_clk_sig,*m_global_buses[0][1]);
 
         SC_METHOD(clk_management);
         sensitive << m_clk;
@@ -360,7 +360,7 @@ namespace dicoplus
     //--------------------------------------------------------------------------
     void dicoplus::attach_global_bus_listener(const uint32_t & p_x,
                                               const uint32_t & p_y,
-                                              dicoplus_global_message_analyzer_if & p_listener)
+                                              dicoplus_global_bus_listener_if & p_listener)
     {
       if(p_x >= m_width)
 	{

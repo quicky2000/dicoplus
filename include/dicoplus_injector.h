@@ -22,7 +22,11 @@
 #include "dicoplus_global_port_manager.h"
 #include "dicoplus_global_port_binding_if.h"
 #include "dicoplus_global_message_analyzer_if.h"
+#include "dicoplus_global_bus_listener_if.h"
+#include "dicoplus_global_bus_probe.h"
+#include "dicoplus_char.h"
 #include <queue>
+#include <vector>
 
 namespace dicoplus
 {
@@ -38,25 +42,67 @@ namespace dicoplus
     // End of methods inherited from dicoplus_global_port_binding_if
 
     // Methods inherited from dicoplus_global_message_analyzer_if
-    void treat(const dicoplus_global_message_char & p_message);
-    void treat(const dicoplus_global_message_separator & p_message);
+    inline void treat(const dicoplus_global_message_char & p_message);
+    inline void treat(const dicoplus_global_message_separator & p_message);
     // End of methods inherited from dicoplus_global_message_analyzer_if
 
     inline void set_grid_content(std::queue<dicoplus_types::t_global_data_type> & p_content);
 
+    inline void spy_bus(const sc_signal<bool> & p_clk_sig,
+			dicoplus_global_bus  & p_bus);
+
     inline ~dicoplus_injector(void);
 
     sc_in<bool> m_clk;
-    sc_in<bool> m_global_req;
-    sc_in<bool> m_global_ack;
   private:
+
+    class spy_port_listener:public dicoplus_global_bus_listener_if
+    {
+    public:
+      inline spy_port_listener(dicoplus_injector & p_injector);
+      // Methods inherited from dicoplus_global_bus_listener_if
+      inline void treat(const dicoplus_global_message_char & p_message);
+      inline void treat(const dicoplus_global_message_separator & p_message);
+      inline void no_activity(void);
+      // End of methods inherited from dicoplus_global_bus_listener_if
+    private:
+      dicoplus_injector & m_injector;
+      bool m_wait_first_separator;
+    };
+
     void run(void);
-    inline void listen_char_propagation(void);
 
     dicoplus_global_port_manager m_global_port_manager;
+    spy_port_listener m_spy_listener;
+    dicoplus_global_bus_probe m_spy_probe;
     std::queue<dicoplus_types::t_global_data_type> * m_grid_content;
     bool m_ready2send_new_char;
   };
+
+  //----------------------------------------------------------------------------
+  dicoplus_injector::spy_port_listener::spy_port_listener(dicoplus_injector & p_injector):
+    m_injector(p_injector),
+    m_wait_first_separator(true)
+    {
+    }
+
+  //----------------------------------------------------------------------------
+  void dicoplus_injector::spy_port_listener::treat(const dicoplus_global_message_char & p_message)
+  {
+    if(!m_wait_first_separator) m_injector.m_ready2send_new_char = true;
+  }
+
+  //----------------------------------------------------------------------------
+  void dicoplus_injector::spy_port_listener::treat(const dicoplus_global_message_separator & p_message)
+  {
+    m_injector.m_ready2send_new_char = true;
+    m_wait_first_separator = false;
+  }
+
+  //----------------------------------------------------------------------------
+  void dicoplus_injector::spy_port_listener::no_activity(void)
+  {
+  }
 
   //----------------------------------------------------------------------------
   void dicoplus_injector::set_grid_content(std::queue<dicoplus_types::t_global_data_type> & p_content)
@@ -74,9 +120,9 @@ namespace dicoplus
   dicoplus_injector::dicoplus_injector(sc_module_name name):
     sc_module(name),
     m_clk("clk"),
-    m_global_req("global_req"),
-    m_global_ack("global_ack"),
     m_global_port_manager("global_port_manager",*this),
+    m_spy_listener(*this),
+    m_spy_probe("spy_probe",m_spy_listener),
     m_grid_content(NULL),
     m_ready2send_new_char(false)
       {
@@ -85,20 +131,7 @@ namespace dicoplus
 	SC_THREAD(run);
 	sensitive << m_clk.pos();	
 
-	SC_METHOD(listen_char_propagation);
-	sensitive << m_clk.pos();
       }
-
-
-    //----------------------------------------------------------------------------
-    void dicoplus_injector::listen_char_propagation(void)
-    {
-      if(m_global_req.read() && m_global_ack.read())
-	{
-	  std::cout << name() << " : Ready to send a new char" << std::endl ;
-	  m_ready2send_new_char = true;
-	}
-    }
 
     //----------------------------------------------------------------------------
     void dicoplus_injector::bind_input_port(dicoplus_global_bus & p_bus)
@@ -110,6 +143,14 @@ namespace dicoplus
     void dicoplus_injector::bind_output_port(dicoplus_global_bus & p_bus)
     {
       m_global_port_manager.bind_output_port(p_bus);
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_injector::spy_bus(const sc_signal<bool> & p_clk_sig,
+				    dicoplus_global_bus  & p_bus)
+    {
+      m_spy_probe.m_clock(p_clk_sig);
+      m_spy_probe(p_bus);
     }
 
     //----------------------------------------------------------------------------
@@ -127,27 +168,17 @@ namespace dicoplus
 	  wait();
 	}
 
-#if 0
-      if(m_global_port_manager.output_box_empty())
+      while(!m_global_port_manager.output_box_empty())
 	{
-	  m_global_port_manager.post_message(*new dicoplus_global_message_char(1));
+	  wait();
 	}
-      wait();
-      if(m_global_port_manager.output_box_empty())
+      m_global_port_manager.post_message(*new dicoplus_global_message_separator());
+
+      while(!m_global_port_manager.output_box_empty())
 	{
-	  m_global_port_manager.post_message(*new dicoplus_global_message_char(2));
+	  wait();
 	}
-      wait();
-      if(m_global_port_manager.output_box_empty())
-	{
-	  m_global_port_manager.post_message(*new dicoplus_global_message_char(3));
-	}
-      wait();
-      if(m_global_port_manager.output_box_empty())
-	{
-	  m_global_port_manager.post_message(*new dicoplus_global_message_char(4));
-	}
-#endif
+
       for(uint l_index = 0 ; l_index < 20 ; ++l_index)
 	{
 	  wait();

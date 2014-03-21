@@ -15,12 +15,20 @@
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include "dicoplus_synoptic_global_bus.h"
+#ifndef _DICOPLUS_GLOBAL_BUS_LISTENER_IF_H
+#define _DICOPLUS_GLOBAL_BUS_LISTENER_IF_H
+
+#include "dicoplus_global_message_analyzer_if.h"
 
 namespace dicoplus
 {
-  uint32_t dicoplus_synoptic_global_bus::m_char_message_color_code = 0;
-  uint32_t dicoplus_synoptic_global_bus::m_separator_message_color_code = 0;
-  uint32_t dicoplus_synoptic_global_bus::m_no_activity_color_code = 0;
+  class dicoplus_global_bus_listener_if: public dicoplus_global_message_analyzer_if
+  {
+  public:
+    virtual void no_activity(void)=0;
+  private:
+  };
 }
+
+#endif // _DICOPLUS_GLOBAL_BUS_LISTENER_IF_H
 //EOF

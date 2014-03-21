@@ -21,7 +21,8 @@
 #include "dicoplus_types.h"
 #include "dicoplus_global_bus.h"
 #include "dicoplus_global_message_factory.h"
-#include "dicoplus_global_message_analyzer_if.h"
+#include "dicoplus_global_bus_listener_if.h"
+#include "dicoplus_char.h"
 #include "systemc.h"
 
 namespace dicoplus
@@ -31,7 +32,7 @@ namespace dicoplus
   public:
     SC_HAS_PROCESS(dicoplus_global_bus_probe);
     inline dicoplus_global_bus_probe(sc_module_name p_name,
-				     dicoplus_global_message_analyzer_if & p_listener);
+				     dicoplus_global_bus_listener_if & p_listener);
     inline void operator () (const dicoplus_global_bus  & p_bus);
     sc_in<bool> m_clock;
   private:
@@ -42,12 +43,12 @@ namespace dicoplus
     sc_in<typename dicoplus_types::t_global_cmd_type> m_cmd;
     sc_in<typename dicoplus_types::t_global_data_type> m_data;
 
-    dicoplus_global_message_analyzer_if & m_listener;
+    dicoplus_global_bus_listener_if & m_listener;
   };
 
   //------------------------------------------------------------
   dicoplus_global_bus_probe::dicoplus_global_bus_probe(sc_module_name p_name,
-						       dicoplus_global_message_analyzer_if & p_listener):
+						       dicoplus_global_bus_listener_if & p_listener):
     sc_module(p_name),
     m_clock("clock"),
     m_req("req"),
@@ -74,7 +75,11 @@ namespace dicoplus
     void dicoplus_global_bus_probe::run(void)
     {
 
-      if(m_req.read() && m_ack.read())
+      if(!m_req.read() || !m_ack.read())
+	{
+	  m_listener.no_activity();
+	}
+      else
 	{
 	  const dicoplus_global_message_base & l_message = *dicoplus_global_message_factory::decode_message(m_cmd.read(),
 													    m_data.read());
