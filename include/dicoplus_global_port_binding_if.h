@@ -27,6 +27,7 @@ namespace dicoplus
   public:
     virtual void bind_input_port(dicoplus_global_bus & p_bus)=0;
     virtual void bind_output_port(dicoplus_global_bus & p_bus)=0;
+    inline virtual ~dicoplus_global_port_binding_if(void){}
   };
 }
 #endif // _DICOPLUS_GLOBAL_PORT_BINDING_IF_H_
