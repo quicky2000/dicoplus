@@ -21,8 +21,11 @@
 #include "quicky_exception.h"
 #include "xmlParser.h"
 #include "utf8.h"
+
 #include "dicoplus_cell.h"
 #include "dicoplus_global_bus.h"
+#include "dicoplus_macro_cell.h"
+
 #include "dicoplus_global_bus_probe.h"
 #include "dicoplus_injector.h"
 #include "dicoplus_char.h"
@@ -62,10 +65,8 @@ namespace dicoplus
     unsigned int m_width;
     unsigned int m_height;
     dicoplus_injector m_injector;
-    dicoplus_cell *** m_cells;
-    dicoplus_global_bus *** m_global_buses;
+    dicoplus_macro_cell *** m_macro_cells;
     dicoplus_global_bus * m_injector_global_bus;
-    std::vector<dicoplus_global_bus_probe*> m_global_bus_probes;
   };
 
   //----------------------------------------------------------------------------
@@ -77,8 +78,7 @@ namespace dicoplus
     m_width(0),
     m_height(0),
     m_injector("injector"),
-    m_cells(NULL),
-    m_global_buses(NULL),
+    m_macro_cells(NULL),
     m_injector_global_bus(NULL)
       {
 
@@ -234,41 +234,38 @@ namespace dicoplus
 	std::string l_cell_base_name = "Cell_";
 	try
 	  {
-	    // Creating cell array
-	    m_cells = new dicoplus_cell** [m_width];
-	    std::fill_n(m_cells,m_width,static_cast<dicoplus_cell**>(NULL));
+	    // Creating macrocell array
+	    m_macro_cells = new dicoplus_macro_cell** [m_width];
+	    std::fill_n(m_macro_cells,m_width,static_cast<dicoplus_macro_cell**>(NULL));
 	    
-	    // Creating buses array
-	    m_global_buses = new dicoplus_global_bus** [m_width];
-	    std::fill_n(m_global_buses,m_width,static_cast<dicoplus_global_bus**>(NULL));
+	    
 	    
 	    for(l_allocated_width = 0; l_allocated_width < m_width ; ++l_allocated_width)
 	      {
 		// Complete cell name
 		std::stringstream l_width_stream;
 		l_width_stream << l_allocated_width;
-		std::string l_cell_base_width_name = l_cell_base_name + l_width_stream.str();
+		std::string l_cell_base_width_name = l_width_stream.str();
 
-		// Allocate cell colum
-		m_cells[l_allocated_width] = new dicoplus_cell*[m_height];
-		std::fill_n(m_cells[l_allocated_width],m_height,static_cast<dicoplus_cell*>(NULL));
+		// Allocate macrocell colum
+		m_macro_cells[l_allocated_width] = new dicoplus_macro_cell*[m_height];
+		std::fill_n(m_macro_cells[l_allocated_width],m_height,static_cast<dicoplus_macro_cell*>(NULL));
 
-		// Allocate bus colum
-		m_global_buses[l_allocated_width] = new dicoplus_global_bus*[m_height];
-		std::fill_n(m_global_buses[l_allocated_width],m_height,static_cast<dicoplus_global_bus*>(NULL));
+
 
 		for(l_allocated_height = 0; l_allocated_height < m_height ; ++l_allocated_height)
 		  {
 		    // Completing cell name
 		    std::stringstream l_height_stream;
 		    l_height_stream << l_allocated_height;
-		    std::string l_cell_name = l_cell_base_width_name+"_"+l_height_stream.str();
-		    // Creating cell
-		    dicoplus_cell * l_cell = new dicoplus_cell(l_cell_name.c_str());
-		    l_cell->m_clk(m_clk_sig);
+		    std::string l_cell_suffix_name = l_cell_base_width_name+"_"+l_height_stream.str();
 
+
+
+		    // Creating macro_cell
+		    dicoplus_macro_cell * l_macro_cell = new dicoplus_macro_cell(l_cell_suffix_name.c_str(),m_clk_sig);
 		    // Storing cell in array for deletion
-		    m_cells[l_allocated_width][l_allocated_height] = l_cell;
+		    m_macro_cells[l_allocated_width][l_allocated_height] = l_macro_cell;
 		  }
 	      }
 	  }
@@ -279,47 +276,38 @@ namespace dicoplus
 	      {
 		for(unsigned int l_index_height = 0; l_index_height < m_height ; ++l_index_height)
 		  {
-		    delete m_cells[l_index_width][l_index_height];
-		    delete m_global_buses[l_index_width][l_index_height];
+		    delete m_macro_cells[l_index_width][l_index_height];
 		  }
-		delete m_cells[l_index_width];
-		delete m_global_buses[l_index_width];
+		delete m_macro_cells[l_index_width];
 	      }
 	    for(unsigned int l_index_height = 0; l_index_height < l_allocated_height ; ++l_index_height)
 	      {
-		delete m_cells[l_allocated_width][l_index_height];
-		delete m_global_buses[l_allocated_width][l_index_height];
+		delete m_macro_cells[l_allocated_width][l_index_height];
 	      }
-	    delete[] m_cells[l_allocated_width];
-	    delete[] m_cells;
-	    delete[] m_global_buses[l_allocated_width];
-	    delete[] m_global_buses;
+	    delete[] m_macro_cells[l_allocated_width];
+	    delete[] m_macro_cells;
 	  }
 
  	std::string l_previous_name = "Injector";
  	dicoplus_global_port_binding_if * l_previous_global = &m_injector;
         for(unsigned int l_index_height = 0; l_index_height < m_height ; ++l_index_height)
           {
-            std::stringstream l_height_stream;
-            l_height_stream << l_index_height;
             for (unsigned int l_index_width = 0; l_index_width < m_width ; ++l_index_width) 
               {
 		// Complete cell name
-		std::stringstream l_width_stream;
-		l_width_stream << l_index_width;
-                std::string l_cell_name = l_cell_base_name + l_width_stream.str()+"_"+l_height_stream.str();
-                dicoplus_cell * l_cell = m_cells[l_index_width][l_index_height];
+                dicoplus_macro_cell * l_macro_cell = m_macro_cells[l_index_width][l_index_height];
 
                 // Creating bus
-                std::string l_bus_name = "FROM_" + l_previous_name +"_TO_" + l_cell_name;
+                std::string l_bus_name = "FROM_" + l_previous_name +"_TO_" + l_macro_cell->get_name();
                 dicoplus_global_bus * l_bus = new dicoplus_global_bus(l_bus_name.c_str());
   
                 // Binding with previous cell
-                l_previous_global->bind_output_port(*l_bus);
-                l_cell->bind_input_port(*l_bus);
-		m_global_buses[l_index_width][l_index_height] = l_bus;
-                l_previous_global = l_cell;
-                l_previous_name = l_cell_name;
+		l_previous_global->bind_output_port(*l_bus);
+	
+		l_macro_cell->bind_input_port(*l_bus);
+
+                l_previous_global = l_macro_cell;
+		l_previous_name = l_macro_cell->get_name();
               }
           }
 
@@ -332,7 +320,7 @@ namespace dicoplus
 	if(m_height < 1) throw quicky_exception::quicky_logic_exception("Grid height is less than 1 !",__LINE__,__FILE__);
 
 	// Bind spy bus of injector
-	m_injector.spy_bus(m_clk_sig,*m_global_buses[0][1]);
+	m_injector.spy_bus(m_clk_sig,m_macro_cells[0][1]->get_global_bus());
 
         SC_METHOD(clk_management);
         sensitive << m_clk;
@@ -345,22 +333,13 @@ namespace dicoplus
           {
             for(unsigned int l_index2 = 0; l_index2 < m_height ; ++l_index2)
               {
-                delete m_cells[l_index][l_index2];
-                delete m_global_buses[l_index][l_index2];
+                delete m_macro_cells[l_index][l_index2];
               }
-            delete[] m_cells[l_index];
-            delete[] m_global_buses[l_index];
+            delete[] m_macro_cells[l_index];
           }        
-        delete[] m_cells;
-        delete[] m_global_buses;
+        delete[] m_macro_cells;
 	delete m_injector_global_bus;
     
-        for(std::vector<dicoplus_global_bus_probe*>::iterator l_iter = m_global_bus_probes.begin();
-            l_iter != m_global_bus_probes.end();
-            ++l_iter)
-          {
-            delete *l_iter;
-          }
 
         
       }
@@ -383,7 +362,7 @@ namespace dicoplus
 	  l_stream << "Value " << p_y << " >= to dicoplus height " << m_height;
 	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
 	}
-      m_cells[p_x][p_y]->set_listener(p_listener);
+      m_macro_cells[p_x][p_y]->attach_cell_listener(p_listener);
     }
 
     //--------------------------------------------------------------------------
@@ -409,9 +388,9 @@ namespace dicoplus
       l_y_str << p_y;
       std::string l_probe_name = "probe_bus_from_cell_" + l_x_str.str() + "_" + l_y_str.str();
       dicoplus_global_bus_probe * l_probe = new dicoplus_global_bus_probe(l_probe_name.c_str(),p_listener);
-      l_probe->operator ()(*m_global_buses[p_x][p_y]);
       l_probe->m_clock(m_clk_sig);
-      m_global_bus_probes.push_back(l_probe);
+
+      m_macro_cells[p_x][p_y]->attach_global_bus_listener(*l_probe);
     }
 
     //--------------------------------------------------------------------------
