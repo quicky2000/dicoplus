@@ -221,7 +221,10 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     void dicoplus_injector::treat(const dicoplus_global_message_char & p_message)
     {
-      std::cout << name() << " : Treat char message @ " << sc_time_stamp() << std::endl ;
+      char l_char_array[5] = {0x0,0x0,0x0,0x0,0x0};
+      uint32_t l_cp = dicoplus_char::get_code_point(p_message.get_data().to_uint());
+      utf8::append(l_cp,l_char_array);
+      std::cout << name() << " : Treat char message '" << l_char_array << "'@ " << sc_time_stamp() << std::endl ;
     }
 
     //----------------------------------------------------------------------------
