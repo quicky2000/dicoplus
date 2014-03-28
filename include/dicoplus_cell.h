@@ -23,6 +23,9 @@
 #include "dicoplus_global_port_binding_if.h"
 #include "cell_listener_if.h"
 #include "dicoplus_global_message_analyzer_if.h"
+#include "dicoplus_local_input_port.h"
+#include "dicoplus_local_output_port.h"
+
 namespace dicoplus
 {
   class dicoplus_cell:public sc_module, public dicoplus_global_port_binding_if,public dicoplus_global_message_analyzer_if
@@ -42,6 +45,11 @@ namespace dicoplus
     // End of methods inherited from dicoplus_global_message_analyzer_if
 
     inline void set_listener(cell_listener_if & p_listener);
+    inline void bind_north_port(dicoplus_local_bus & p_bus);
+    inline void bind_east_port(dicoplus_local_bus & p_bus);
+    inline void bind_south_port(dicoplus_local_bus & p_bus);
+    inline void bind_west_port(dicoplus_local_bus & p_bus);
+    inline void bind_output_port(dicoplus_local_bus & p_bus);
 
     sc_in<bool> m_clk;
   private:
@@ -52,6 +60,11 @@ namespace dicoplus
     cell_listener_if * m_listener;
     dicoplus_types::t_global_data_type m_content;
     dicoplus_types::t_cell_FSM_state m_internal_state;
+    dicoplus_local_input_port m_local_north_input_port;
+    dicoplus_local_input_port m_local_east_input_port;
+    dicoplus_local_input_port m_local_south_input_port;
+    dicoplus_local_input_port m_local_west_input_port;
+    dicoplus_local_output_port m_local_output_port;
   };
 
   //----------------------------------------------------------------------------
@@ -61,7 +74,12 @@ namespace dicoplus
     m_global_port_manager("global_port_manager",*this),
     m_listener(NULL),
     m_content(0),
-    m_internal_state(dicoplus_types::UNINITIALIZED)
+    m_internal_state(dicoplus_types::UNINITIALIZED),
+    m_local_north_input_port("north"),
+    m_local_east_input_port("east"),
+    m_local_south_input_port("south"),
+    m_local_west_input_port("west"),
+    m_local_output_port("output")
       {
 	m_global_port_manager.m_clk(m_clk);
       }
@@ -121,6 +139,36 @@ namespace dicoplus
       std::cout << name() << " : Treat separator message @ " << sc_time_stamp() << std::endl ;
 #endif // DEBUG_DICOPLUS_CELL
       m_global_port_manager.post_message(p_message);
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_cell::bind_north_port(dicoplus_local_bus & p_bus)
+    {
+      m_local_north_input_port(p_bus);      
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_cell::bind_east_port(dicoplus_local_bus & p_bus)
+    {
+      m_local_east_input_port(p_bus);      
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_cell::bind_south_port(dicoplus_local_bus & p_bus)
+    {
+      m_local_south_input_port(p_bus);      
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_cell::bind_west_port(dicoplus_local_bus & p_bus)
+    {
+      m_local_west_input_port(p_bus);      
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_cell::bind_output_port(dicoplus_local_bus & p_bus)
+    {
+      m_local_output_port(p_bus);      
     }
 
   

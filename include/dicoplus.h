@@ -22,12 +22,14 @@
 #include "xmlParser.h"
 #include "utf8.h"
 
-#include "dicoplus_cell.h"
 #include "dicoplus_global_bus.h"
-#include "dicoplus_macro_cell.h"
-
 #include "dicoplus_global_bus_probe.h"
+
+#include "dicoplus_macro_cell.h"
+#include "dicoplus_local_output_port.h"
+#include "dicoplus_local_bus.h"
 #include "dicoplus_injector.h"
+
 #include "dicoplus_char.h"
 #include "systemc.h"
 #include <cstring>
@@ -61,6 +63,8 @@ namespace dicoplus
     inline void clk_management(void);
 
     sc_signal<bool> m_clk_sig;
+    dicoplus_local_output_port m_fake_output_port;
+    dicoplus_local_bus m_fake_output_bus;
     std::vector<std::string> m_word_list;
     unsigned int m_width;
     unsigned int m_height;
@@ -75,6 +79,8 @@ namespace dicoplus
     sc_module(p_name),
     m_clk("clk"),
     m_clk_sig("clk_sig"),
+    m_fake_output_port("fake_output_port"),
+    m_fake_output_bus("fake_output_bus"),
     m_width(0),
     m_height(0),
     m_injector("injector"),
@@ -321,6 +327,41 @@ namespace dicoplus
 
 	// Bind spy bus of injector
 	m_injector.spy_bus(m_clk_sig,m_macro_cells[0][1]->get_global_bus());
+
+	// Bind fake output port
+	m_fake_output_port(m_fake_output_bus);
+
+	// Bind north port of first line and south port of bottom line
+	for(unsigned int l_index = 0 ; l_index < m_width ; ++l_index)
+	  {
+	    m_macro_cells[l_index][0]->bind_north_port(m_fake_output_bus);
+	    m_macro_cells[l_index][m_height - 1]->bind_south_port(m_fake_output_bus);
+	  }
+        
+	for(unsigned int l_x_index = 0; l_x_index < m_width ; ++l_x_index)
+	  {
+	    for(unsigned int l_y_index = 1; l_y_index < m_height ; ++l_y_index)
+	      {
+		m_macro_cells[l_x_index][l_y_index]->bind_north_port(m_macro_cells[l_x_index][l_y_index - 1]->get_output_bus());
+                m_macro_cells[l_x_index][l_y_index - 1]->bind_south_port(m_macro_cells[l_x_index][l_y_index]->get_output_bus());
+	      }
+	  }
+
+	// Bind west port of first column and south port of right column
+	for(unsigned int l_index = 0 ; l_index < m_height ; ++l_index)
+	  {
+	    m_macro_cells[0][l_index]->bind_west_port(m_fake_output_bus);
+	    m_macro_cells[m_width - 1][l_index]->bind_east_port(m_fake_output_bus);
+	  }
+        
+	for(unsigned int l_x_index = 1; l_x_index < m_width ; ++l_x_index)
+	  {
+	    for(unsigned int l_y_index = 0; l_y_index < m_height ; ++l_y_index)
+	      {
+		m_macro_cells[l_x_index][l_y_index]->bind_west_port(m_macro_cells[l_x_index - 1][l_y_index]->get_output_bus());
+                m_macro_cells[l_x_index - 1][l_y_index]->bind_east_port(m_macro_cells[l_x_index][l_y_index]->get_output_bus());
+	      }
+	  }
 
         SC_METHOD(clk_management);
         sensitive << m_clk;

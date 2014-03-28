@@ -20,6 +20,7 @@
 
 #include "dicoplus_cell.h"
 #include "dicoplus_global_bus.h"
+#include "dicoplus_local_bus.h"
 #include "dicoplus_global_bus_probe.h"
 #include "dicoplus_global_port_binding_if.h"
 
@@ -37,6 +38,12 @@ namespace dicoplus
     inline ~dicoplus_macro_cell(void);
     inline const std::string & get_name(void)const;
 
+    inline void bind_north_port(dicoplus_local_bus & p_bus);
+    inline void bind_east_port(dicoplus_local_bus & p_bus);
+    inline void bind_south_port(dicoplus_local_bus & p_bus);
+    inline void bind_west_port(dicoplus_local_bus & p_bus);
+    inline dicoplus_local_bus & get_output_bus(void);
+
     // Methods inherited from dicoplus_global_port_binding_if
     inline void bind_input_port(dicoplus_global_bus & p_bus);
     inline void bind_output_port(dicoplus_global_bus & p_bus);
@@ -47,6 +54,7 @@ namespace dicoplus
     dicoplus_cell m_cell;
     dicoplus_global_bus * m_global_bus;
     dicoplus_global_bus_probe * m_global_probe;
+    dicoplus_local_bus m_local_output_bus;
   };
 
   //----------------------------------------------------------------------------
@@ -55,10 +63,41 @@ namespace dicoplus
     m_name(p_name),
     m_cell(sc_module_name(("Cell_"+p_name).c_str())),
     m_global_bus(NULL),
-    m_global_probe(NULL)
+    m_global_probe(NULL),
+    m_local_output_bus("Cell_"+p_name+"_output")
       {
+	m_cell.bind_output_port(m_local_output_bus);
 	m_cell.m_clk(p_sig);
+      }
 
+    //----------------------------------------------------------------------------
+    void dicoplus_macro_cell::bind_north_port(dicoplus_local_bus & p_bus)
+    {
+      m_cell.bind_north_port(p_bus);
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_macro_cell::bind_east_port(dicoplus_local_bus & p_bus)
+    {
+      m_cell.bind_east_port(p_bus);
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_macro_cell::bind_south_port(dicoplus_local_bus & p_bus)
+    {
+      m_cell.bind_south_port(p_bus);
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_macro_cell::bind_west_port(dicoplus_local_bus & p_bus)
+    {
+      m_cell.bind_west_port(p_bus);
+    }
+
+    //----------------------------------------------------------------------------
+    dicoplus_local_bus & dicoplus_macro_cell::get_output_bus(void)
+      {
+	return m_local_output_bus;
       }
 
     //----------------------------------------------------------------------------
