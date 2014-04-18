@@ -22,6 +22,7 @@
 #include "dicoplus_global_bus.h"
 #include "dicoplus_local_bus.h"
 #include "dicoplus_global_bus_probe.h"
+#include "dicoplus_local_bus_probe.h"
 #include "dicoplus_global_port_binding_if.h"
 
 namespace dicoplus
@@ -35,6 +36,9 @@ namespace dicoplus
     inline dicoplus_global_bus & get_global_bus(void)const;
     inline void attach_cell_listener(cell_listener_if & p_listener);
     inline void attach_global_bus_listener(dicoplus_global_bus_probe & p_probe);
+    inline bool is_attached_local_bus_listener_probe(void)const;
+    inline void attach_local_bus_listener_probe(dicoplus_local_bus_probe & p_probe);
+    inline void attach_local_bus_listener(dicoplus_local_bus_listener_if & p_listener);
     inline ~dicoplus_macro_cell(void);
     inline const std::string & get_name(void)const;
 
@@ -55,6 +59,7 @@ namespace dicoplus
     dicoplus_global_bus * m_global_bus;
     dicoplus_global_bus_probe * m_global_probe;
     dicoplus_local_bus m_local_output_bus;
+    dicoplus_local_bus_probe * m_local_probe;
   };
 
   //----------------------------------------------------------------------------
@@ -64,7 +69,8 @@ namespace dicoplus
     m_cell(sc_module_name(("Cell_"+p_name).c_str())),
     m_global_bus(NULL),
     m_global_probe(NULL),
-    m_local_output_bus("Cell_"+p_name+"_output")
+    m_local_output_bus("Cell_"+p_name+"_output"),
+    m_local_probe(NULL)
       {
 	m_cell.bind_output_port(m_local_output_bus);
 	m_cell.m_clk(p_sig);
@@ -129,6 +135,27 @@ namespace dicoplus
     {
       if(!m_global_bus) throw quicky_exception::quicky_logic_exception("Macro_Cell \""+m_name+"\" global bus has not been initialised",__LINE__,__FILE__);
       p_probe.operator ()(*m_global_bus);
+      m_global_probe = & p_probe;
+    }
+
+    //----------------------------------------------------------------------------
+    bool dicoplus_macro_cell::is_attached_local_bus_listener_probe(void)const
+    {
+      return m_local_probe;
+    }
+
+    //----------------------------------------------------------------------------
+    void dicoplus_macro_cell::attach_local_bus_listener_probe(dicoplus_local_bus_probe & p_probe)
+    {
+      assert(NULL == m_local_probe);
+      p_probe.operator ()(m_local_output_bus);
+      m_local_probe = & p_probe;
+    }
+    //----------------------------------------------------------------------------
+    void dicoplus_macro_cell::attach_local_bus_listener(dicoplus_local_bus_listener_if & p_listener)
+    {
+      assert(m_local_probe);
+      m_local_probe->attach_listener(p_listener);
     }
 
     //----------------------------------------------------------------------------
@@ -147,8 +174,9 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     dicoplus_macro_cell::~dicoplus_macro_cell(void)
       {
-	delete m_global_bus;
+        delete m_local_probe;
 	delete m_global_probe;
+	delete m_global_bus;
       }
 
 }
