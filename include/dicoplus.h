@@ -59,7 +59,14 @@ namespace dicoplus
     inline void attach_global_bus_listener(const uint32_t & p_x,
                                            const uint32_t & p_y,
                                            dicoplus_global_bus_listener_if & p_listener);
+    inline void attach_local_bus_listener(const uint32_t & p_x,
+                                          const uint32_t & p_y,
+                                          dicoplus_local_bus_listener_if & p_listener);
   private:
+    inline void check_coord(const uint32_t & p_x,
+                            const uint32_t & p_y,
+                            const unsigned int & p_line,
+                            const std::string & p_file);
     inline void clk_management(void);
 
     sc_signal<bool> m_clk_sig;
@@ -384,25 +391,33 @@ namespace dicoplus
 
         
       }
+    //--------------------------------------------------------------------------
+    void dicoplus::check_coord(const uint32_t & p_x,
+                               const uint32_t & p_y,
+                               const unsigned int & p_line,
+                               const std::string & p_file)
+    {
+      if(p_x >= m_width)
+	{
+	  std::stringstream l_stream;
+	  l_stream << "Value " << p_x << " >= to dicoplus width " << m_width;
+	  throw quicky_exception::quicky_logic_exception(l_stream.str(),p_line,p_file);
+	}
+      if(p_y >= m_height)
+	{
+	  std::stringstream l_stream;
+	  l_stream << "Value " << p_y << " >= to dicoplus height " << m_height;
+	  throw quicky_exception::quicky_logic_exception(l_stream.str(),p_line,p_file);
+	}
+    }
+
 
     //--------------------------------------------------------------------------
     void dicoplus::attach_cell_listener(const uint32_t & p_x,
 					const uint32_t & p_y,
 					cell_listener_if & p_listener)
     {
-      
-      if(p_x >= m_width)
-	{
-	  std::stringstream l_stream;
-	  l_stream << "Value " << p_x << " >= to dicoplus width " << m_width;
-	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
-	}
-      if(p_y >= m_height)
-	{
-	  std::stringstream l_stream;
-	  l_stream << "Value " << p_y << " >= to dicoplus height " << m_height;
-	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
-	}
+      check_coord(p_x,p_y,__LINE__,__FILE__);
       m_macro_cells[p_x][p_y]->attach_cell_listener(p_listener);
     }
 
@@ -411,18 +426,7 @@ namespace dicoplus
                                               const uint32_t & p_y,
                                               dicoplus_global_bus_listener_if & p_listener)
     {
-      if(p_x >= m_width)
-	{
-	  std::stringstream l_stream;
-	  l_stream << "Value " << p_x << " >= to dicoplus width " << m_width;
-	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
-	}
-      if(p_y >= m_height)
-	{
-	  std::stringstream l_stream;
-	  l_stream << "Value " << p_y << " >= to dicoplus height " << m_height;
-	  throw quicky_exception::quicky_logic_exception(l_stream.str(),__LINE__,__FILE__);
-	}
+      check_coord(p_x,p_y,__LINE__,__FILE__);
       std::stringstream l_x_str;
       l_x_str << p_x;
       std::stringstream l_y_str;
@@ -432,6 +436,29 @@ namespace dicoplus
       l_probe->m_clock(m_clk_sig);
 
       m_macro_cells[p_x][p_y]->attach_global_bus_listener(*l_probe);
+    }
+
+    //--------------------------------------------------------------------------
+    void dicoplus::attach_local_bus_listener(const uint32_t & p_x,
+                                              const uint32_t & p_y,
+                                              dicoplus_local_bus_listener_if & p_listener)
+    {
+      check_coord(p_x,p_y,__LINE__,__FILE__);
+      if(!m_macro_cells[p_x][p_y]->is_attached_local_bus_listener_probe())
+        {
+          std::stringstream l_x_str;
+          l_x_str << p_x;
+          std::stringstream l_y_str;
+          l_y_str << p_y;
+          std::string l_probe_name = "local_probe_bus_from_cell_" + l_x_str.str() + "_" + l_y_str.str();
+          dicoplus_local_bus_probe * l_probe = new dicoplus_local_bus_probe(l_probe_name.c_str(),p_listener);
+          l_probe->m_clock(m_clk_sig);
+          m_macro_cells[p_x][p_y]->attach_local_bus_listener_probe(*l_probe);
+        }
+      else
+        {
+          m_macro_cells[p_x][p_y]->attach_local_bus_listener(p_listener);
+        }
     }
 
     //--------------------------------------------------------------------------
