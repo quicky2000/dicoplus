@@ -21,6 +21,7 @@
 #include "dicoplus_local_bus.h"
 #include "dicoplus_local_bus_listener_if.h"
 #include "systemc.h"
+#include <vector>
 
 namespace dicoplus
 {
@@ -31,14 +32,15 @@ namespace dicoplus
     inline dicoplus_local_bus_probe(sc_module_name p_name,
 				    dicoplus_local_bus_listener_if & p_listener);
     inline void operator () (const dicoplus_local_bus  & p_bus);
+    inline void attach_listener(dicoplus_local_bus_listener_if & p_listener);
     sc_in<bool> m_clock;
   private:
     void run(void);
 
     sc_in<bool> m_valid;
-    sc_in<bool> m_ack;
-
-    dicoplus_local_bus_listener_if & m_listener;
+    sc_in<bool> m_data;
+    bool m_previous_valid;
+    std::vector<dicoplus_local_bus_listener_if *> m_listeners;
   };
 
   //------------------------------------------------------------
@@ -48,11 +50,13 @@ namespace dicoplus
     m_clock("clock"),
     m_valid("valid"),
     m_data("data"),
-    m_listener(p_listener)
+    m_previous_valid(false)
     {
       SC_METHOD(run);
       dont_initialize();
       sensitive << m_clock.pos();
+
+      m_listeners.push_back(&p_listener);
     }
 
     //------------------------------------------------------------
@@ -63,17 +67,32 @@ namespace dicoplus
     }
 
     //------------------------------------------------------------
+    void dicoplus_local_bus_probe::attach_listener(dicoplus_local_bus_listener_if & p_listener)
+    {
+      m_listeners.push_back(&p_listener);
+    }
+
+    //------------------------------------------------------------
     void dicoplus_local_bus_probe::run(void)
     {
 
-      if(!m_valid.read())
-	{
-	  m_listener.no_activity();
-	}
-      else
-	{
-	  m_listener.data(m_data.read());
-	}
+      if(m_valid.read() != m_previous_valid)
+        {
+          m_previous_valid = m_valid.read();
+          for(std::vector<dicoplus_local_bus_listener_if*>::iterator l_iter = m_listeners.begin();
+              m_listeners.end() != l_iter;
+              ++l_iter)
+            {
+              if(!m_valid.read())
+                {
+                  (*l_iter)->no_activity();
+                }
+              else
+                {
+                  (*l_iter)->data(m_data.read());
+                }
+            }
+        }
 
     }
 
