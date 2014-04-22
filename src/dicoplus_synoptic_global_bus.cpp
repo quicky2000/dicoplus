@@ -22,5 +22,7 @@ namespace dicoplus
   uint32_t dicoplus_synoptic_global_bus::m_char_message_color_code = 0;
   uint32_t dicoplus_synoptic_global_bus::m_separator_message_color_code = 0;
   uint32_t dicoplus_synoptic_global_bus::m_no_activity_color_code = 0;
+  const uint32_t dicoplus_synoptic_global_bus::m_width = 7;
+  const uint32_t dicoplus_synoptic_global_bus::m_height = 11;
 }
 //EOF

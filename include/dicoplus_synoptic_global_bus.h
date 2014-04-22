@@ -33,6 +33,8 @@ namespace dicoplus
 					const std::string & p_name);
     inline virtual ~dicoplus_synoptic_global_bus(void){}
 
+    inline static const uint32_t & get_height(void);
+    inline static const uint32_t & get_width(void);
     // Methods inherited from dicoplus_global_bus_listener_if
     inline void treat(const dicoplus_global_message_char & p_message);
     inline void treat(const dicoplus_global_message_separator & p_message);
@@ -44,26 +46,40 @@ namespace dicoplus
     static uint32_t m_char_message_color_code;
     static uint32_t m_separator_message_color_code;
     static uint32_t m_no_activity_color_code;
+    static const uint32_t m_width;
+    static const uint32_t m_height;
   };
 
   //----------------------------------------------------------------------------
   dicoplus_synoptic_global_bus::dicoplus_synoptic_global_bus(synoptic::synoptic & p_owner,
 							     const std::string & p_name
 							     ):
-    synoptic::zone_container(p_name,7,11),
+    synoptic::zone_container(p_name,dicoplus_synoptic_global_bus::m_width,dicoplus_synoptic_global_bus::m_height),
     m_char_display(p_owner,"char_display"),
     m_previous_activity(true)
-    {
-      add_zone(1,1,m_char_display);
+      {
+        add_zone(1,1,m_char_display);
 
-      // Initialisation of color codes
-      if(!m_char_message_color_code)
-	{
-	  m_separator_message_color_code = p_owner.get_color_code(0xFF,0,0);
-	  m_char_message_color_code = p_owner.get_color_code(0,0xFF,0);
-	  m_no_activity_color_code = p_owner.get_color_code(0,0,0);
-	}
-    }
+        // Initialisation of color codes
+        if(!m_char_message_color_code)
+          {
+            m_separator_message_color_code = p_owner.get_color_code(0xFF,0,0);
+            m_char_message_color_code = p_owner.get_color_code(0,0xFF,0);
+            m_no_activity_color_code = p_owner.get_color_code(0,0,0);
+          }
+      }
+    //----------------------------------------------------------------------------
+    const uint32_t & dicoplus_synoptic_global_bus::get_height(void)
+      {
+        return dicoplus_synoptic_global_bus::m_height;
+      }
+
+    //----------------------------------------------------------------------------
+    const uint32_t & dicoplus_synoptic_global_bus::get_width(void)
+      {
+        return dicoplus_synoptic_global_bus::m_width;
+      }
+
     //----------------------------------------------------------------------------
     void dicoplus_synoptic_global_bus::treat(const dicoplus_global_message_char & p_message)
     {
