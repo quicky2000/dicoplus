@@ -22,6 +22,7 @@
 #include "dicoplus_char.h"
 #include "dicoplus_synoptic_cell.h"
 #include "dicoplus_synoptic_char.h"
+#include "dicoplus_synoptic_H_bus.h"
 #include <iostream>
 
 namespace dicoplus
@@ -41,6 +42,9 @@ namespace dicoplus
       dicoplus_char::init();
       dicoplus_synoptic_char::init();
       dicoplus_synoptic_cell::compute_dim();
+      dicoplus_synoptic_H_bus::init();
+      dicoplus_synoptic_V_bus::init();
+      dicoplus_synoptic_macro_cell::init();
       std::cout << "Static initialisation done" << std::endl ;
     }
 

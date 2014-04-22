@@ -47,6 +47,10 @@ namespace dicoplus
 	    {
 	      m_dicoplus.attach_cell_listener(l_x_index,l_y_index,m_grid.get_cell(l_x_index,l_y_index));
 	      m_dicoplus.attach_global_bus_listener(l_x_index,l_y_index,m_grid.get_global_bus(l_x_index,l_y_index));
+	      if(l_x_index) m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index,m_grid.get_east_listener(l_x_index - 1,l_y_index));
+	      if(l_y_index) m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index,m_grid.get_south_listener(l_x_index,l_y_index - 1));
+	      if(l_x_index + 2 < m_dicoplus.get_width())m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index,m_grid.get_west_listener(l_x_index + 1,l_y_index));
+	      if(l_y_index + 2 < m_dicoplus.get_height())m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index,m_grid.get_north_listener(l_x_index,l_y_index + 1));
 	    }
 	}
 

@@ -1,5 +1,5 @@
 /*    This file is part of dicoplus
-      The aim of this software is to solvde dicoplus game
+      The aim of this software is to solve dicoplus game
       Copyright (C) 2014  Julien Thevenon ( julien_thevenon at yahoo.fr )
 
       This program is free software: you can redistribute it and/or modify
@@ -15,12 +15,13 @@
       You should have received a copy of the GNU General Public License
       along with this program.  If not, see <http://www.gnu.org/licenses/>
 */
-#include "dicoplus_synoptic_grid.h"
+
+#include "dicoplus_synoptic_macro_cell.h"
 
 namespace dicoplus
 {
-#if 0
-  const uint32_t dicoplus_synoptic_grid::m_inter_h_cell = 7;
-  const uint32_t dicoplus_synoptic_grid::m_inter_v_cell = 7;
-#endif
+  uint32_t dicoplus_synoptic_macro_cell::m_fixed_width = 0;
+  uint32_t dicoplus_synoptic_macro_cell::m_fixed_height = 0;
+  uint32_t dicoplus_synoptic_macro_cell::m_fixed_big_height = 0;
 }
+//EOF
