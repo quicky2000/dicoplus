@@ -33,6 +33,7 @@ namespace dicoplus
   public:
     inline dicoplus_synoptic_macro_cell(synoptic::synoptic &,
 					const std::string & p_name,
+                                        bool p_H_bus,
 					bool p_V_bus
 					);
     inline dicoplus_synoptic_cell & get_cell(void);
@@ -50,7 +51,7 @@ namespace dicoplus
   private:
     dicoplus_synoptic_global_bus m_global_bus;
     dicoplus_synoptic_cell m_cell;
-    dicoplus_synoptic_H_bus m_H_bus;
+    dicoplus_synoptic_H_bus * m_H_bus;
     dicoplus_synoptic_V_bus * m_V_bus;
     static uint32_t m_fixed_width;
     static uint32_t m_fixed_height;
@@ -60,20 +61,24 @@ namespace dicoplus
   //----------------------------------------------------------------------------
   dicoplus_synoptic_macro_cell::dicoplus_synoptic_macro_cell(synoptic::synoptic & p_owner,
 							     const std::string & p_name,
+                                                             bool p_H_bus,
 							     bool p_V_bus
 							     ):
     synoptic::zone_container(p_name,m_fixed_width,(p_V_bus ? m_fixed_big_height : m_fixed_height)),
     m_global_bus(p_owner,p_name+"_global_bus"),
     m_cell(p_owner,p_name+"_cell"),
-    m_H_bus(p_owner,p_name+"_H_bus"),
+    m_H_bus(p_H_bus ? new dicoplus_synoptic_H_bus(p_owner,p_name+"_H_bus") : NULL),
     m_V_bus(p_V_bus ? new dicoplus_synoptic_V_bus(p_owner,p_name+"_V_bus") : NULL)
       {
 	add_zone(0,0,m_global_bus);
 	add_zone(dicoplus_synoptic_H_bus::get_width(),0,m_cell);
-	add_zone(0,dicoplus_synoptic_global_bus::get_height(),m_H_bus);
-        m_H_bus.set_color_code(dicoplus_synoptic_H_bus::RIGHTWARD,255,255,255);
-        m_H_bus.set_color_code(dicoplus_synoptic_H_bus::LEFTWARD,255,255,255);
-        m_H_bus.set_color_code(dicoplus_synoptic_H_bus::BACKGROUND,0,0,0);
+        if(m_H_bus)
+          {
+            add_zone(0,dicoplus_synoptic_global_bus::get_height(),*m_H_bus);
+            m_H_bus->set_color_code(dicoplus_synoptic_H_bus::RIGHTWARD,255,255,255);
+            m_H_bus->set_color_code(dicoplus_synoptic_H_bus::LEFTWARD,255,255,255);
+            m_H_bus->set_color_code(dicoplus_synoptic_H_bus::BACKGROUND,0,0,0);
+          }
 	if(m_V_bus)
           {
             add_zone(11,dicoplus_synoptic_cell::get_height(),*m_V_bus);
@@ -89,6 +94,7 @@ namespace dicoplus
     dicoplus_synoptic_macro_cell::~dicoplus_synoptic_macro_cell(void)
       {
 	delete m_V_bus;
+	delete m_H_bus;
       }
 
     //----------------------------------------------------------------------------
@@ -132,20 +138,22 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     dicoplus_local_bus_listener_if & dicoplus_synoptic_macro_cell::get_east_listener(void)
       {
-        return m_H_bus.get_east_listener();
+        assert(m_H_bus);
+        return m_H_bus->get_east_listener();
       }
 
     //----------------------------------------------------------------------------
     dicoplus_local_bus_listener_if & dicoplus_synoptic_macro_cell::get_south_listener(void)
       {
         assert(m_V_bus);
-        return m_V_bus->get_north_listener();
+        return m_V_bus->get_south_listener();
       }
 
     //----------------------------------------------------------------------------
     dicoplus_local_bus_listener_if & dicoplus_synoptic_macro_cell::get_west_listener(void)
       {
-        return m_H_bus.get_west_listener();
+        assert(m_H_bus);
+        return m_H_bus->get_west_listener();
       }
 
 }

@@ -168,7 +168,7 @@ namespace dicoplus
 		    // Creating macro_cell
 		    uint32_t l_x = dicoplus_synoptic_macro_cell::get_width() * l_allocated_width;
 		    uint32_t l_y = dicoplus_synoptic_macro_cell::get_height(true) * l_allocated_height;
-		    dicoplus_synoptic_macro_cell * l_macro_cell = new dicoplus_synoptic_macro_cell(p_owner,l_macro_cell_name.c_str(),m_nb_cell_height != l_allocated_height + 1);
+		    dicoplus_synoptic_macro_cell * l_macro_cell = new dicoplus_synoptic_macro_cell(p_owner,l_macro_cell_name.c_str(),l_allocated_width,m_nb_cell_height != l_allocated_height + 1);
                     add_zone(l_x,l_y,*l_macro_cell);
 		    m_macro_cells[l_allocated_width][l_allocated_height] = l_macro_cell;
 		  }

@@ -31,7 +31,8 @@ namespace dicoplus
   {
   public:
     inline dicoplus_macro_cell(const std::string & p_name,
-			       sc_signal<bool> & p_sig);
+			       sc_signal<bool> & p_sig, 
+                               const unsigned int & p_nb_neighbour);
     inline void bind(dicoplus_macro_cell & p_macro_cell);
     inline dicoplus_global_bus & get_global_bus(void)const;
     inline void attach_cell_listener(cell_listener_if & p_listener);
@@ -64,9 +65,10 @@ namespace dicoplus
 
   //----------------------------------------------------------------------------
   dicoplus_macro_cell::dicoplus_macro_cell(const std::string & p_name,
-					   sc_signal<bool> & p_sig):
+					   sc_signal<bool> & p_sig, 
+                                           const unsigned int & p_nb_neighbour):
     m_name(p_name),
-    m_cell(sc_module_name(("Cell_"+p_name).c_str())),
+    m_cell(sc_module_name(("Cell_"+p_name).c_str()),p_nb_neighbour),
     m_global_bus(NULL),
     m_global_probe(NULL),
     m_local_output_bus("Cell_"+p_name+"_output"),

@@ -276,7 +276,7 @@ namespace dicoplus
 
 
 		    // Creating macro_cell
-		    dicoplus_macro_cell * l_macro_cell = new dicoplus_macro_cell(l_cell_suffix_name.c_str(),m_clk_sig);
+		    dicoplus_macro_cell * l_macro_cell = new dicoplus_macro_cell(l_cell_suffix_name.c_str(),m_clk_sig,(l_allocated_width > 0) + (l_allocated_height > 0) + (l_allocated_width + 1 < m_width) + (l_allocated_height + 1 < m_height));
 		    // Storing cell in array for deletion
 		    m_macro_cells[l_allocated_width][l_allocated_height] = l_macro_cell;
 		  }
@@ -333,7 +333,7 @@ namespace dicoplus
 	if(m_height < 1) throw quicky_exception::quicky_logic_exception("Grid height is less than 1 !",__LINE__,__FILE__);
 
 	// Bind spy bus of injector
-	m_injector.spy_bus(m_clk_sig,m_macro_cells[0][1]->get_global_bus());
+	m_injector.spy_bus(m_clk_sig,m_macro_cells[1][1]->get_global_bus());
 
 	// Bind fake output port
 	m_fake_output_port(m_fake_output_bus);

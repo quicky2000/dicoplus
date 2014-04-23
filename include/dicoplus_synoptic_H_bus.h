@@ -37,7 +37,7 @@ namespace dicoplus
     inline static const uint32_t & get_width(void);
     inline static const uint32_t & get_height(void);
     inline static void init(void);
-    typedef enum {BACKGROUND=0,RIGHTWARD,LEFTWARD}t_color_code;
+    typedef enum {BACKGROUND=0,LEFTWARD,RIGHTWARD}t_color_code;
   private:
     // Pure virtual method inherited from dicoplus_synoptic_local_bus
     inline const std::set<std::pair<uint32_t,uint32_t> > & get_pixel_location(const unsigned int & p_code)const;
