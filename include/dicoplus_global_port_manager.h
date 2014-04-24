@@ -24,6 +24,8 @@
 #include "dicoplus_global_message_factory.h"
 #include "dicoplus_global_message_analyzer_if.h"
 
+//#define DEBUG_GLOBAL_PORT_MANAGER_COMMUNICATION
+
 namespace dicoplus
 {
   class dicoplus_global_port_manager:sc_module
@@ -31,7 +33,8 @@ namespace dicoplus
   public:
     SC_HAS_PROCESS(dicoplus_global_port_manager);
     inline dicoplus_global_port_manager(sc_module_name p_name,
-                                        dicoplus_global_message_analyzer_if & p_listener);
+                                        dicoplus_global_message_analyzer_if & p_listener,
+                                        bool p_autonomous = false);
     inline void bind_input_port(dicoplus_global_bus & p_bus);
     inline void bind_output_port(dicoplus_global_bus & p_bus);
 
@@ -41,9 +44,9 @@ namespace dicoplus
     inline const dicoplus_global_message_base & get_message(void);
 
     sc_in<bool> m_clk;
+    inline void listen(void);
   private:
 
-    inline void listen(void);
     inline void manage_output(void);
     dicoplus_global_input_port m_global_input_port;
     dicoplus_global_output_port m_global_output_port;
@@ -54,30 +57,22 @@ namespace dicoplus
 
   //----------------------------------------------------------------------------
   dicoplus_global_port_manager::dicoplus_global_port_manager(sc_module_name p_name,
-                                        dicoplus_global_message_analyzer_if & p_listener):
+                                        dicoplus_global_message_analyzer_if & p_listener,
+                                        bool p_autonomous):
     sc_module(p_name),
     m_clk("clk"),
     m_global_input_port("gi_port"),
     m_global_output_port("go_port"),
     m_listener(p_listener)
    {
-#ifdef DEBUG_GLOBAL_PORT_MANAGER_COMMUNICATION
-     if(std::string(name())=="top.dicoplus.Cell_0_0.global_port_manager")
+     SC_THREAD(manage_output);
+     sensitive << m_clk.pos();
+
+     if(p_autonomous)
        {
-#endif
          SC_METHOD(listen);
          sensitive << m_clk.pos();
-#ifdef DEBUG_GLOBAL_PORT_MANAGER_COMMUNICATION
        }
-
-     if(std::string(name())=="top.dicoplus.injector.global_port_manager")
-       {
-#endif
-         SC_THREAD(manage_output);
-         sensitive << m_clk.pos();
-#ifdef DEBUG_GLOBAL_PORT_MANAGER_COMMUNICATION
-       }
-#endif
    }
     //----------------------------------------------------------------------------
     void dicoplus_global_port_manager::bind_input_port(dicoplus_global_bus & p_bus)
@@ -95,7 +90,7 @@ namespace dicoplus
     void dicoplus_global_port_manager::listen(void)
     { 
 #ifdef DEBUG_GLOBAL_PORT_MANAGER_COMMUNICATION
-      std::cout << name() << " : " ;;
+      std::cout << name() << " : " ;
       std::cout << "listen input port @ " << sc_time_stamp() << std::endl ;
 #endif
       if(m_input_box.is_empty())
@@ -156,7 +151,7 @@ namespace dicoplus
 		  }
 		while(m_global_output_port.ack()==false);
 #ifdef DEBUG_GLOBAL_PORT_MANAGER_COMMUNICATION
-		std::cout << name() << " : " ;;
+		std::cout << name() << " : " ;
 		std::cout << "Acknowledge received" << std::endl ;            
 #endif
 

@@ -129,7 +129,7 @@ namespace dicoplus
   dicoplus_injector::dicoplus_injector(sc_module_name name):
     sc_module(name),
     m_clk("clk"),
-    m_global_port_manager("global_port_manager",*this),
+    m_global_port_manager("global_port_manager",*this,true),
     m_spy_listener(*this),
     m_spy_probe("spy_probe",m_spy_listener),
     m_grid_content(NULL),
@@ -211,10 +211,12 @@ namespace dicoplus
 	    }
 	}
 
-      for(uint l_index = 0 ; l_index < 20 ; ++l_index)
+      std::cout << name() << " : Starting final loop" << std::endl ;
+      for(uint l_index = 0 ; l_index < 2000 ; ++l_index)
 	{
 	  wait();
 	}
+      std::cout << name() << " : Ending final loop" << std::endl ;
       sc_stop();
     }
     
