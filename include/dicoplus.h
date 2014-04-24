@@ -333,7 +333,7 @@ namespace dicoplus
 	if(m_height < 1) throw quicky_exception::quicky_logic_exception("Grid height is less than 1 !",__LINE__,__FILE__);
 
 	// Bind spy bus of injector
-	m_injector.spy_bus(m_clk_sig,m_macro_cells[1][1]->get_global_bus());
+	m_injector.spy_bus(m_clk_sig,m_macro_cells[1][2]->get_global_bus());
 
 	// Bind fake output port
 	m_fake_output_port(m_fake_output_bus);
