@@ -47,6 +47,15 @@ namespace dicoplus
     inline virtual ~dicoplus_synoptic_cell(void){}
   private:
     inline void set_state_(const dicoplus_types::t_cell_FSM_state & p_state);
+    inline static void add_representation(const dicoplus_types::t_cell_FSM_state & p_state,
+                                          const uint32_t & p_code_point,
+                                          const uint8_t & p_r,
+                                          const uint8_t & p_g,
+                                          const uint8_t & p_b,
+                                          synoptic::synoptic & p_owner);
+
+                                   
+                                   
     synoptic::color_zone m_up_border;
     synoptic::color_zone m_right_border;
     synoptic::color_zone m_down_border;
@@ -137,18 +146,17 @@ namespace dicoplus
 
       if(!m_cell_state_representation.size())
         {
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::UNINITIALIZED,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('U'),p_owner.get_color_code(0xFF,0,0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::INITIALIZED,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('I'),p_owner.get_color_code(0xFF,0xFF,0xFF))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::READY2START,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('R'),p_owner.get_color_code(0x0,0x0,0xFF))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::FIRST,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('F'),p_owner.get_color_code(0xFF,0xFF,0x0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::NOT_FIRST,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('F'),p_owner.get_color_code(0xFF,0x0,0x0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::SKIP_NEXT_WEST,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('W'),p_owner.get_color_code(0xFF,0x0,0x0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::SKIP_NEXT_NORTH,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('N'),p_owner.get_color_code(0xFF,0x0,0x0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::POTENTIAL,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('P'),p_owner.get_color_code(0xFF,0xFF,0x0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::POTENTIAL_WEST,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('W'),p_owner.get_color_code(0xFF,0xFF,0x0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::POTENTIAL_NORTH,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('N'),p_owner.get_color_code(0xFF,0xFF,0x0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::ATTACHED,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('A'),p_owner.get_color_code(0x00,0x80,0x0))));
-          m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(dicoplus_types::CONFIRMED,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code('A'),p_owner.get_color_code(0x00,0xFF,0x0))));
+          add_representation(dicoplus_types::UNINITIALIZED,'U',0xFF,0,0,p_owner);
+          add_representation(dicoplus_types::INITIALIZED,'I',0xFF,0xFF,0xFF,p_owner);
+          add_representation(dicoplus_types::READY2START,'R',0x0,0x0,0xFF,p_owner);
+	  //          add_representation(dicoplus_types::FIRST,'F',0xFF,0xFF,0x0,p_owner);
+          add_representation(dicoplus_types::NOT_FIRST,'F',0xFF,0x0,0x0,p_owner);
+
+          
+          add_representation(dicoplus_types::POTENTIAL_FIRST,'F',0xFF,0xD7,0x0,p_owner);
+          add_representation(dicoplus_types::START_POTENTIAL_NOT_FIRST,'F',0xFF,0x75,0x0,p_owner);
+          add_representation(dicoplus_types::POTENTIAL_NOT_FIRST,'F',0xFF,0x45,0x0,p_owner);
+          add_representation(dicoplus_types::POTENTIAL_FIRST_NOT_FIRST,'F',0xFF,0xA5,0x0,p_owner);
         }
 
       // Adding borders
@@ -207,6 +215,18 @@ namespace dicoplus
 	throw quicky_exception::quicky_logic_exception("dicoplus_synoptic_cell dimensions already computed",__LINE__,__FILE__);
       }
   }
+
+  //----------------------------------------------------------------------------
+  void dicoplus_synoptic_cell::add_representation(const dicoplus_types::t_cell_FSM_state & p_state,
+                                                  const uint32_t & p_code_point,
+                                                  const uint8_t & p_r,
+                                                  const uint8_t & p_g,
+                                                  const uint8_t & p_b,
+                                                  synoptic::synoptic & p_owner)
+  {
+    m_cell_state_representation.insert(std::map<dicoplus_types::t_cell_FSM_state,std::pair<uint32_t,uint32_t> >::value_type(p_state,std::pair<uint32_t,uint32_t>(dicoplus_char::get_internal_code(p_code_point),p_owner.get_color_code(p_r,p_g,p_b))));
+  }
+    
 }
 
 #endif // _DICOPLUS_SYNOPTIC_CELL_H_

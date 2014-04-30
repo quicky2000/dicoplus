@@ -27,10 +27,20 @@ namespace dicoplus
   class dicoplus_types
   {
   public:
-      typedef sc_bv<dicoplus_configuration::m_global_cmd_nb_bits > t_global_cmd_type;
-      typedef sc_bv<dicoplus_configuration::m_characters_nb_bits> t_global_data_type;
-      typedef enum {UNINITIALIZED=0,INITIALIZED,READY2START,FIRST,NOT_FIRST,SKIP_NEXT_WEST,SKIP_NEXT_NORTH,POTENTIAL,POTENTIAL_WEST,POTENTIAL_NORTH,ATTACHED,CONFIRMED} t_cell_FSM_state;
-      inline static const std::string cell_FSM_state2string(const t_cell_FSM_state & p_state);
+    typedef sc_bv<dicoplus_configuration::m_global_cmd_nb_bits > t_global_cmd_type;
+    typedef sc_bv<dicoplus_configuration::m_characters_nb_bits> t_global_data_type;
+    typedef enum 
+      {
+	UNINITIALIZED=0,
+	INITIALIZED,
+	READY2START,
+	POTENTIAL_FIRST,
+	START_POTENTIAL_NOT_FIRST,
+	POTENTIAL_NOT_FIRST,
+	POTENTIAL_FIRST_NOT_FIRST,
+	NOT_FIRST
+      } t_cell_FSM_state;
+    inline static const std::string cell_FSM_state2string(const t_cell_FSM_state & p_state);
   private:
   };
 
@@ -48,33 +58,21 @@ namespace dicoplus
         case READY2START:
           return "READY2START";
           break;
-	case FIRST:
-          return "FIRST";
+	case POTENTIAL_FIRST:
+          return "POTENTIAL_FIRST";
+	  break;
+	case START_POTENTIAL_NOT_FIRST:
+          return "START_POTENTIAL_NOT_FIRST";
+	  break;
+	case POTENTIAL_NOT_FIRST:
+          return "POTENTIAL_NOT_FIRST";
+	  break;
+	case POTENTIAL_FIRST_NOT_FIRST:
+          return "POTENTIAL_FIRST_NOT_FIRST";
 	  break;
 	case NOT_FIRST:
           return "NOT_FIRST";
-	break;
-	case SKIP_NEXT_NORTH:
-          return "SKIP_NEXT_NORTH";
-	break;
-	case SKIP_NEXT_WEST:
-          return "SKIP_NEXT_WEST";
-	break;
-	case POTENTIAL_NORTH:
-          return "POTENTIAL_NORTH";
-	break;
-	case POTENTIAL_WEST:
-          return "POTENTIAL_WEST";
-	break;
-	case POTENTIAL:
-          return "POTENTIAL";
-	break;
-	case ATTACHED:
-          return "ATTACHED";
-	break;
-	case CONFIRMED:
-          return "CONFIRMED";
-	break;
+	  break;
         default:
 	  std::stringstream l_stream;
 	  l_stream << p_state;
