@@ -19,6 +19,7 @@
 #define _DICOPLUS_TYPES_H_
 
 #include "dicoplus_configuration.h"
+#include "quicky_exception.h"
 #include "systemc.h"
 #include <sstream>
 
@@ -38,7 +39,14 @@ namespace dicoplus
 	START_POTENTIAL_NOT_FIRST,
 	POTENTIAL_NOT_FIRST,
 	POTENTIAL_FIRST_NOT_FIRST,
-	NOT_FIRST
+	NOT_FIRST,
+	CONFIRMED_FIRST,
+	FIRST,
+	CONFIRMED_MIDDLE,
+	CONFIRMED_LAST,
+        MATCHING_NOT_FIRST,
+        MATCHED_NOT_FIRST,
+        ATTACHED_NOT_FIRST
       } t_cell_FSM_state;
     inline static const std::string cell_FSM_state2string(const t_cell_FSM_state & p_state);
   private:
@@ -72,6 +80,27 @@ namespace dicoplus
 	  break;
 	case NOT_FIRST:
           return "NOT_FIRST";
+	  break;
+	case CONFIRMED_LAST:
+          return "CONFIRMED_LAST";
+	  break;
+	case CONFIRMED_MIDDLE:
+          return "CONFIRMED_MIDDLE";
+	  break;
+	case FIRST:
+          return "FIRST";
+	  break;
+	case CONFIRMED_FIRST:
+          return "CONFIRMED_FIRST";
+	  break;
+	case MATCHING_NOT_FIRST:
+          return "MATCHING_NOT_FIRST";
+	  break;
+	case MATCHED_NOT_FIRST:
+          return "MATCHING_NOT_FIRST";
+	  break;
+	case ATTACHED_NOT_FIRST:
+          return "ATTACHED_NOT_FIRST";
 	  break;
         default:
 	  std::stringstream l_stream;

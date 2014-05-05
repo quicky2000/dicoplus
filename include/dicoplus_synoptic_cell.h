@@ -149,8 +149,14 @@ namespace dicoplus
           add_representation(dicoplus_types::UNINITIALIZED,'U',0xFF,0,0,p_owner);
           add_representation(dicoplus_types::INITIALIZED,'I',0xFF,0xFF,0xFF,p_owner);
           add_representation(dicoplus_types::READY2START,'R',0x0,0x0,0xFF,p_owner);
-	  //          add_representation(dicoplus_types::FIRST,'F',0xFF,0xFF,0x0,p_owner);
+	  add_representation(dicoplus_types::FIRST,'F',0xFF,0xFF,0x0,p_owner);
+	  add_representation(dicoplus_types::CONFIRMED_FIRST,'F',0x0,0xFF,0x0,p_owner);
+	  add_representation(dicoplus_types::CONFIRMED_MIDDLE,'M',0x0,0xFF,0x0,p_owner);
+	  add_representation(dicoplus_types::CONFIRMED_LAST,'L',0x0,0xFF,0x0,p_owner);
           add_representation(dicoplus_types::NOT_FIRST,'F',0xFF,0x0,0x0,p_owner);
+          add_representation(dicoplus_types::MATCHING_NOT_FIRST,'M',0x20,0xB2,0xAA,p_owner);
+          add_representation(dicoplus_types::MATCHED_NOT_FIRST,'M',0x98,0xFB,0x98,p_owner);
+          add_representation(dicoplus_types::ATTACHED_NOT_FIRST,'A',0x98,0xFB,0x98,p_owner);
 
           
           add_representation(dicoplus_types::POTENTIAL_FIRST,'F',0xFF,0xD7,0x0,p_owner);
