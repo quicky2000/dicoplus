@@ -414,6 +414,7 @@ namespace dicoplus
           // Forward the message
 	  m_global_port_manager.post_message(p_message);
           break;
+        case COMMON_CONFIRMED:
         case COMMON_POTENTIAL_FIRST:
         case COMMON_NOT_FIRST:
           // Don't care about message content
@@ -421,10 +422,6 @@ namespace dicoplus
           // Forward the message
           m_global_port_manager.post_message(p_message);
           break ;
-        case COMMON_CONFIRMED:
-          // Forward the message
-          m_global_port_manager.post_message(p_message);
-          break;
 	default:
 	  throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled state to receive a char message : \""+common_FSM_state2string(m_internal_state),__LINE__,__FILE__);
 	  break;
