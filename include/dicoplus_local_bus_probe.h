@@ -20,6 +20,7 @@
 
 #include "dicoplus_local_bus.h"
 #include "dicoplus_local_bus_listener_if.h"
+#include "quicky_exception.h"
 #include "systemc.h"
 #include <vector>
 
@@ -38,7 +39,7 @@ namespace dicoplus
     void run(void);
 
     sc_in<bool> m_valid;
-    sc_in<bool> m_data;
+    sc_in<sc_bv<2> > m_data;
     bool m_previous_valid;
     std::vector<dicoplus_local_bus_listener_if *> m_listeners;
   };
@@ -89,7 +90,22 @@ namespace dicoplus
                 }
               else
                 {
-                  (*l_iter)->data(m_data.read());
+		  switch(m_data.read().to_uint())
+		    {
+		    case dicoplus_types::LOCAL_MESSAGE_NOT_VALID :
+		      (*l_iter)->data(false);
+		      break;
+		    case dicoplus_types::LOCAL_MESSAGE_VALID:
+		      (*l_iter)->data(true);
+		      break;
+		    case dicoplus_types::LOCAL_MESSAGE_CANCEL :
+		      (*l_iter)->cancel();
+		      break;
+		    default:
+		      {
+			throw quicky_exception::quicky_logic_exception("Unhandled data value"+dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_data.read().to_uint())+" from probe \""+std::string(name()),__LINE__,__FILE__);
+		      }
+		    }
                 }
             }
         }

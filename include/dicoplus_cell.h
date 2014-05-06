@@ -65,9 +65,10 @@ namespace dicoplus
     // Enumerated type to represent local message content
     typedef enum
       {
-        NO_MESSAGE=1,
+        NO_MESSAGE,
         NOT_VALID,
-        VALID
+        VALID,
+	CANCEL
       } t_local_message;
 
     typedef enum
@@ -185,29 +186,37 @@ namespace dicoplus
     m_remaining_locals(m_nb_neighbour),
     m_state_first_candidate(UNKNOWN_FIRST),
     m_state_not_first_candidate(UNKNOWN_NOT_FIRST),
-    m_gdb_debug(true)
+    m_gdb_debug(false)
       {
 
         if(!m_representations.size())
           {
             add_representation(COMMON_INITIALIZED,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::INITIALIZED);
             add_representation(COMMON_READY2START,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::READY2START);
-            add_representation(COMMON_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_START_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::START_POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST,POTENTIAL_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,MATCHING_NOT_FIRST,dicoplus_types::MATCHING_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::MATCHED_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::ATTACHED_NOT_FIRST);
             add_representation(COMMON_READY2START,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
             add_representation(COMMON_READY2START,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::MATCHED_NOT_FIRST);
             add_representation(COMMON_READY2START,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::ATTACHED_NOT_FIRST);
+            add_representation(COMMON_START_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::START_POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST,POTENTIAL_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::FIRST);
             add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
             add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,MATCHING_NOT_FIRST,dicoplus_types::MATCHING_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::MATCHED_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::ATTACHED_NOT_FIRST);
             add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::NOT_FIRST);
+            add_representation(COMMON_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
             add_representation(COMMON_CONFIRMED,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::CONFIRMED_FIRST);
             add_representation(COMMON_CONFIRMED,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::CONFIRMED_MIDDLE);
             add_representation(COMMON_CONFIRMED,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::CONFIRMED_LAST);
@@ -232,9 +241,9 @@ namespace dicoplus
 
     //----------------------------------------------------------------------------
     void dicoplus_cell::add_representation(const t_common_FSM_state & p_common_FSM_state,
-                            const t_first_FSM_state & p_first_FSM_state,
-                            const t_not_first_FSM_state & p_not_first_FSM_state,
-                            const dicoplus_types::t_cell_FSM_state & p_representation_state)
+                                           const t_first_FSM_state & p_first_FSM_state,
+                                           const t_not_first_FSM_state & p_not_first_FSM_state,
+                                           const dicoplus_types::t_cell_FSM_state & p_representation_state)
     {
       m_representations.insert(
                                t_rep_map::value_type(
@@ -323,7 +332,7 @@ namespace dicoplus
     void dicoplus_cell::treat(const dicoplus_global_message_char & p_message)
     {
 #ifdef DEBUG_DICOPLUS_CELL
-      if(m_gdb_debug)
+      if(m_gdb_debug && COMMON_UNINITIALIZED != m_internal_state && COMMON_INITIALIZED != m_internal_state)
         {
           char l_char_array[5] = {0x0,0x0,0x0,0x0,0x0};
           uint32_t l_cp = dicoplus_char::get_code_point(p_message.get_data().to_uint());
@@ -412,6 +421,10 @@ namespace dicoplus
           // Forward the message
           m_global_port_manager.post_message(p_message);
           break ;
+        case COMMON_CONFIRMED:
+          // Forward the message
+          m_global_port_manager.post_message(p_message);
+          break;
 	default:
 	  throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled state to receive a char message : \""+common_FSM_state2string(m_internal_state),__LINE__,__FILE__);
 	  break;
@@ -465,6 +478,10 @@ namespace dicoplus
           // Information is transmitted to following cells
 	  m_global_port_manager.post_message(p_message);
           break;
+        case COMMON_CONFIRMED:
+          // Forward the message
+          m_global_port_manager.post_message(p_message);
+          break;
 	default:
 	  throw quicky_exception::quicky_logic_exception("Unhandled state to receive a separator message : \""+common_FSM_state2string(m_internal_state)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
 	  break;
@@ -479,6 +496,7 @@ namespace dicoplus
           unsigned int l_nb_valid = 0;
           unsigned int l_nb_invalid = 0;
           unsigned int l_nb_local_msg = 0;
+	  unsigned int l_nb_cancel = 0;
 
 	  t_local_message l_local_messages[4];
 
@@ -490,20 +508,29 @@ namespace dicoplus
 #ifdef DEBUG_DICOPLUS_CELL
                   if(m_gdb_debug)
                     {
-                      std::cout << name() << " received " << m_local_input_ports[l_orientation]->get_data() << " from " << orientation2string((t_orientation)l_orientation) << std::endl ;
+                      std::cout << name() << " received " << dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_local_input_ports[l_orientation]->get_data().to_uint()) << " from " << orientation2string((t_orientation)l_orientation) << std::endl ;
                     }
 #endif // DEBUG_DICOPLUS_CELL
-                  ++l_nb_local_msg;
-                  if(m_local_input_ports[l_orientation]->get_data())
-                    {
-                      ++l_nb_valid;
-                      l_local_messages[l_orientation] = VALID;
-                    }
-                  else
-                    {
-                      ++l_nb_invalid;
-                      l_local_messages[l_orientation] = NOT_VALID;
-                    }
+		  switch(m_local_input_ports[l_orientation]->get_data().to_uint())
+		    {
+		    case dicoplus_types::LOCAL_MESSAGE_VALID :
+		      ++l_nb_valid;
+                      ++l_nb_local_msg;
+		      l_local_messages[l_orientation] = VALID;
+		      break;
+		    case dicoplus_types::LOCAL_MESSAGE_NOT_VALID :
+		      ++l_nb_invalid;
+                      ++l_nb_local_msg;
+		      l_local_messages[l_orientation] = NOT_VALID;
+		      break;
+		    case dicoplus_types::LOCAL_MESSAGE_CANCEL :
+		      ++l_nb_cancel;
+		      l_local_messages[l_orientation] = CANCEL;
+                      break;
+		    default:
+		      quicky_exception::quicky_logic_exception("Unhandled local message \""+dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_local_input_ports[l_orientation]->get_data().to_uint())+"\" in cell \""+std::string(name())+"\"",__LINE__,__FILE__);
+		      break;
+		    }
 
                 }
               else
@@ -512,12 +539,140 @@ namespace dicoplus
                 }
             }
 
+          m_local_output_port.no_data();
+
 	  if(1 < l_nb_local_msg) 
 	    {
 	      std::stringstream l_stream;
 	      l_stream << l_nb_local_msg;
-	      throw quicky_exception::quicky_logic_exception("Only one local message is possible at a time : "+l_stream.str(),__LINE__,__FILE__);
+	      throw quicky_exception::quicky_logic_exception(std::string(name())+": Only one local message is possible at a time : "+l_stream.str(),__LINE__,__FILE__);
 	    }
+
+          if(l_nb_cancel && COMMON_CONFIRMED != m_internal_state)
+            {
+#ifdef DEBUG_DICOPLUS_CELL
+              if(m_gdb_debug)
+                {
+                  std::cout << name() << " : Treat cancel message @ " << sc_time_stamp() << std::endl ;
+                  print_internal_state();
+                }
+#endif // DEBUG_DICOPLUS_CELL
+              switch(m_state_not_first_candidate)
+                {
+                case POTENTIAL_NOT_FIRST_RELOADED:
+                  {
+                    unsigned int l_remaining_valid_links = 0;
+                    for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
+                      {
+                        if(NOT_FIRST_PREVIOUS == m_not_first_local_link_states[l_orientation] || NOT_FIRST_PREVIOUS_RELOADED == m_not_first_local_link_states[l_orientation])
+                          {
+                            if(CANCEL == l_local_messages[l_orientation])
+                              {
+                                m_not_first_local_link_states[l_orientation] = NOT_FIRST_NONE;
+                              }
+                            else
+                              {
+                                ++l_remaining_valid_links;
+                              }
+                          }
+                      }
+                    if(!l_remaining_valid_links)
+                      {
+                        set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
+                        set_internal_state(COMMON_NOT_FIRST);
+                      }
+                  }
+                      
+                  break;
+                case POTENTIAL_NOT_FIRST:
+                  {
+                    unsigned int l_remaining_valid_links = 0;
+                    for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
+                      {
+                        if(NOT_FIRST_PREVIOUS == m_not_first_local_link_states[l_orientation])
+                          {
+                            if(CANCEL == l_local_messages[l_orientation])
+                              {
+                                m_not_first_local_link_states[l_orientation] = NOT_FIRST_NONE;
+                              }
+                            else
+                              {
+                                ++l_remaining_valid_links;
+                              }
+                          }
+                      }
+                    if(!l_remaining_valid_links)
+                      {
+                        set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
+                        set_internal_state(COMMON_NOT_FIRST);
+                      }
+                  }
+                  break;
+                case UNKNOWN_NOT_FIRST:
+                  break;
+                case ATTACHED_NOT_FIRST:
+                  {
+                    unsigned int l_remaining_valid_links = 0;
+                    for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
+                      {
+                        if(NOT_FIRST_NEXT == m_not_first_local_link_states[l_orientation])
+                          {
+                            if(CANCEL == l_local_messages[l_orientation])
+                              {
+                                m_not_first_local_link_states[l_orientation] = NOT_FIRST_NONE;
+                              }
+                            else
+                              {
+                                ++l_remaining_valid_links;
+                              }
+                          }
+                      }
+                    if(!l_remaining_valid_links)
+                      {
+                        set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
+                        set_internal_state(COMMON_NOT_FIRST);
+                        m_local_output_port.cancel();
+                      }
+                  }
+                  break;
+                default:
+                  throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled not_first candidate state to receive a cancel message : \""+state_not_first_candidate2string(m_state_not_first_candidate)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
+                  break;
+                }
+              switch(m_state_first_candidate)
+                {
+                case FIRST:
+                  {
+                    unsigned int l_remaining_valid_links = 0;
+                    for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
+                      {
+                        if(FIRST_NEXT == m_first_local_link_states[l_orientation])
+                          {
+                            if(CANCEL == l_local_messages[l_orientation])
+                              {
+                                m_first_local_link_states[l_orientation] = FIRST_NONE;
+                              }
+                            else
+                              {
+                                ++l_remaining_valid_links;
+                              }
+                          }
+                      }
+                    if(!l_remaining_valid_links)
+                      {
+                        set_state_first_FSM(UNKNOWN_FIRST);
+                        set_internal_state(COMMON_NOT_FIRST);
+                      }
+                  }
+                  break;
+                case UNKNOWN_FIRST:
+                  break;
+                default:
+                  throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled first candidate state to receive a cancel message : \""+state_first_candidate2string(m_state_first_candidate)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
+                  break;
+
+                }
+            }
 
           // Modify state in function of received messages
           if(l_nb_local_msg)
@@ -608,107 +763,121 @@ namespace dicoplus
                 case COMMON_POTENTIAL_FIRST_NOT_FIRST:
                   // Nothing to do. Event is managed by first_candidate FSM and not first_candidate FSM
                   break;
+                case COMMON_CONFIRMED:
+                  // Nothing to do 
+                  break;
                 default:
                   throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled state to receive a local message : \""+common_FSM_state2string(m_internal_state)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
                   break;
                 }
             }
-          m_local_output_port.no_data();
 	  m_global_port_manager.listen();
           m_remaining_locals -= l_nb_local_msg;
-          if(!m_remaining_locals)
+          if(COMMON_CONFIRMED != m_internal_state)
             {
-#ifdef DEBUG_DICOPLUS_CELL
-              if(m_gdb_debug)
+              if(!m_remaining_locals)
                 {
-                  std::cout << name() << " : Message complete" << std::endl ;
-                  print_internal_state();
-                }
+#ifdef DEBUG_DICOPLUS_CELL
+                  if(m_gdb_debug)
+                    {
+                      std::cout << name() << " : Message complete" << std::endl ;
+                      print_internal_state();
+                    }
 #endif // DEBUG_DICOPLUS_CELL
 
-              switch(m_state_first_candidate)
-                {
-                case UNKNOWN_FIRST:
-                  if(COMMON_POTENTIAL_FIRST == m_internal_state || COMMON_POTENTIAL_FIRST_NOT_FIRST == m_internal_state)
+                  switch(m_state_first_candidate)
                     {
-                      // Set state of FSM dedicated to first letter candidate
-                      set_state_first_FSM(POTENTIAL_FIRST);
-                    }
-                  break;
-                case POTENTIAL_FIRST:
-                  // Means that we did`nt receive neighbour validation
-                  set_state_first_FSM(UNKNOWN_FIRST);
+                    case UNKNOWN_FIRST:
+                      if(COMMON_POTENTIAL_FIRST == m_internal_state || COMMON_POTENTIAL_FIRST_NOT_FIRST == m_internal_state)
+                        {
+                          // Set state of FSM dedicated to first letter candidate
+                          set_state_first_FSM(POTENTIAL_FIRST);
+                        }
+                      break;
+                    case POTENTIAL_FIRST:
+                      // Means that we did`nt receive neighbour validation
+                      set_state_first_FSM(UNKNOWN_FIRST);
 
-                  // Now we are sure that this is not first
-                  set_internal_state(COMMON_NOT_FIRST);
-                  break;
-                case FIRST:
-                  // Nothing to do
-                  break;
-                default:
-                  throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled first candidate state to receive a local message : \""+state_first_candidate2string(m_state_first_candidate)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
-                  break;
-                }
-              switch(m_state_not_first_candidate)
-                {
-                case UNKNOWN_NOT_FIRST:
-                  if(COMMON_POTENTIAL_NOT_FIRST == m_internal_state || COMMON_POTENTIAL_FIRST_NOT_FIRST == m_internal_state)
+                      // Now we are sure that this is not first
+                      set_internal_state(COMMON_NOT_FIRST);
+                      break;
+                    case FIRST:
+                      // Nothing to do
+                      break;
+                    default:
+                      throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled first candidate state to receive a local message : \""+state_first_candidate2string(m_state_first_candidate)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
+                      break;
+                    }
+                  switch(m_state_not_first_candidate)
                     {
-                      // Set state of FSM dedicated to not_first letter candidate
+                    case UNKNOWN_NOT_FIRST:
+                      if(COMMON_POTENTIAL_NOT_FIRST == m_internal_state || COMMON_POTENTIAL_FIRST_NOT_FIRST == m_internal_state)
+                        {
+                          // Set state of FSM dedicated to not_first letter candidate
+                          set_state_not_first_FSM(POTENTIAL_NOT_FIRST);
+                        }
+                      break;
+                    case  MATCHING_NOT_FIRST:
+                      set_state_not_first_FSM(MATCHED_NOT_FIRST);
+                      break;
+                    case POTENTIAL_NOT_FIRST_RELOADED:
                       set_state_not_first_FSM(POTENTIAL_NOT_FIRST);
-                    }
-                  break;
-                case  MATCHING_NOT_FIRST:
-                  set_state_not_first_FSM(MATCHED_NOT_FIRST);
-                  break;
-                case POTENTIAL_NOT_FIRST_RELOADED:
-                  set_state_not_first_FSM(POTENTIAL_NOT_FIRST);
-		  // Scan local link state to indicate that previous link is no more valid
-		  // TO BE DONE
+                      // Scan local link state to indicate that previous link is no more valid
+                      // TO BE DONE
 
-		  // Reset local link state
-                  for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
-                    {
-                      if(NOT_FIRST_PREVIOUS == m_not_first_local_link_states[l_orientation])
+                      // Reset local link state
+                      for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
                         {
-                          m_not_first_local_link_states[l_orientation] = NOT_FIRST_NONE;
+                          if(NOT_FIRST_PREVIOUS == m_not_first_local_link_states[l_orientation])
+                            {
+                              m_not_first_local_link_states[l_orientation] = NOT_FIRST_NONE;
+                            }
+                          else if(NOT_FIRST_PREVIOUS_RELOADED == m_not_first_local_link_states[l_orientation])
+                            {
+                              m_not_first_local_link_states[l_orientation] = NOT_FIRST_PREVIOUS;
+                            }
                         }
-                      else if(NOT_FIRST_PREVIOUS_RELOADED == m_not_first_local_link_states[l_orientation])
+
+                      break;
+                    case POTENTIAL_NOT_FIRST:
+                      // Means that we did`nt receive neighbour validation
+                      set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
+
+                      // Now we are sure that this is not first
+                      set_internal_state(COMMON_POTENTIAL_NOT_FIRST == m_internal_state ? COMMON_NOT_FIRST : COMMON_POTENTIAL_FIRST);
+
+                      // Scan local link state to indicate that previous link is no more valid
+                      // TO BE DONE
+
+                      // Reset local link state
+                      for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
                         {
-                          m_not_first_local_link_states[l_orientation] = NOT_FIRST_PREVIOUS;
+                          if(NOT_FIRST_PREVIOUS == m_not_first_local_link_states[l_orientation])
+                            {
+                              m_not_first_local_link_states[l_orientation] = NOT_FIRST_NONE;
+                            }
                         }
-                    }
 
-                  break;
-		case POTENTIAL_NOT_FIRST:
-                  // Means that we did`nt receive neighbour validation
-                  set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
+                      break;
+                    case ATTACHED_NOT_FIRST:
+                      // Nothing to do
+                      break;
+                    case MATCHED_NOT_FIRST:
+                      // The latest matched character didn't receive any neighbour
+                      // validation so it must be reverted
+                      set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
+                      set_internal_state(COMMON_NOT_FIRST);
 
-                  // Now we are sure that this is not first
-                  set_internal_state(COMMON_POTENTIAL_NOT_FIRST == m_internal_state ? COMMON_NOT_FIRST : COMMON_POTENTIAL_FIRST);
-
-		  // Scan local link state to indicate that previous link is no more valid
-		  // TO BE DONE
-
-		  // Reset local link state
-                  for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
-                    {
-                      if(NOT_FIRST_PREVIOUS == m_not_first_local_link_states[l_orientation])
-                        {
-                          m_not_first_local_link_states[l_orientation] = NOT_FIRST_NONE;
-                        }
-                    }
-
-		  break;
-                case ATTACHED_NOT_FIRST:
-                  // Nothing to do
-                  break;
-                default:
-                  throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled not_first candidate state to receive a local message : \""+state_not_first_candidate2string(m_state_not_first_candidate)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
-                  break;
+                      // Send invalid message to predecessors
+                      m_local_output_port.cancel();
+                      break;
+                    default:
+                      throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled not_first candidate state to receive a local message : \""+state_not_first_candidate2string(m_state_not_first_candidate)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
+                      break;
                   
+                    }
+                  m_remaining_locals = m_nb_neighbour;
                 }
-              m_remaining_locals = m_nb_neighbour;
             }
 	  wait();
 	}
@@ -787,7 +956,7 @@ namespace dicoplus
         }
       else
         {
-          throw quicky_exception::quicky_logic_exception("No representation for state (" + common_FSM_state2string(m_internal_state) +"," + state_first_candidate2string(m_state_first_candidate) + "," + state_not_first_candidate2string(m_state_not_first_candidate) + ")",__LINE__,__FILE__);
+          throw quicky_exception::quicky_logic_exception(std::string(name())+" : No representation for state (" + common_FSM_state2string(m_internal_state) +"," + state_first_candidate2string(m_state_first_candidate) + "," + state_not_first_candidate2string(m_state_not_first_candidate) + ")",__LINE__,__FILE__);
         }
 
 
@@ -859,45 +1028,45 @@ namespace dicoplus
           }
       }
 
-  //----------------------------------------------------------------------------
+    //----------------------------------------------------------------------------
     const std::string dicoplus_cell::common_FSM_state2string(const t_common_FSM_state & p_state)
-    {
-      switch(p_state)
-        {
-        case COMMON_UNINITIALIZED:
-          return "COMMON_UNINITIALIZED";
-          break;
-        case COMMON_INITIALIZED:
-          return "COMMON_INITIALIZED";
-          break;
-        case COMMON_READY2START:
-          return "COMMON_READY2START";
-          break;
-	case COMMON_POTENTIAL_FIRST:
-          return "COMMON_POTENTIAL_FIRST";
-	  break;
-	case COMMON_START_POTENTIAL_NOT_FIRST:
-          return "COMMON_START_POTENTIAL_NOT_FIRST";
-	  break;
-	case COMMON_POTENTIAL_NOT_FIRST:
-          return "COMMON_POTENTIAL_NOT_FIRST";
-	  break;
-	case COMMON_POTENTIAL_FIRST_NOT_FIRST:
-          return "COMMON_POTENTIAL_FIRST_NOT_FIRST";
-	  break;
-	case COMMON_NOT_FIRST:
-          return "COMMON_NOT_FIRST";
-	  break;
-	case COMMON_CONFIRMED:
-          return "COMMON_CONFIRMED";
-	  break;
-        default:
-	  std::stringstream l_stream;
-	  l_stream << p_state;
-          throw quicky_exception::quicky_logic_exception("No string representation for common FSM state \""+l_stream.str()+"\"",__LINE__,__FILE__);
-          break;
-        }
-    }
+      {
+        switch(p_state)
+          {
+          case COMMON_UNINITIALIZED:
+            return "COMMON_UNINITIALIZED";
+            break;
+          case COMMON_INITIALIZED:
+            return "COMMON_INITIALIZED";
+            break;
+          case COMMON_READY2START:
+            return "COMMON_READY2START";
+            break;
+          case COMMON_POTENTIAL_FIRST:
+            return "COMMON_POTENTIAL_FIRST";
+            break;
+          case COMMON_START_POTENTIAL_NOT_FIRST:
+            return "COMMON_START_POTENTIAL_NOT_FIRST";
+            break;
+          case COMMON_POTENTIAL_NOT_FIRST:
+            return "COMMON_POTENTIAL_NOT_FIRST";
+            break;
+          case COMMON_POTENTIAL_FIRST_NOT_FIRST:
+            return "COMMON_POTENTIAL_FIRST_NOT_FIRST";
+            break;
+          case COMMON_NOT_FIRST:
+            return "COMMON_NOT_FIRST";
+            break;
+          case COMMON_CONFIRMED:
+            return "COMMON_CONFIRMED";
+            break;
+          default:
+            std::stringstream l_stream;
+            l_stream << p_state;
+            throw quicky_exception::quicky_logic_exception("No string representation for common FSM state \""+l_stream.str()+"\"",__LINE__,__FILE__);
+            break;
+          }
+      }
 
   
 }

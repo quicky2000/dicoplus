@@ -31,6 +31,7 @@ namespace dicoplus
     // Virtual methods to implement inherited from dicoplus_local_bus_listener_if
     inline void no_activity(void);
     inline void data(bool p_data);
+    inline void cancel(void);
     // End of virtual methods
   private:
     const unsigned int m_color_code;
@@ -56,6 +57,13 @@ namespace dicoplus
     void synoptic_local_bus_listener::data(bool p_data)
     {
       m_bus.set_color_code(m_color_code,p_data ? 0 : 255, p_data ? 255 : 0,0);
+      m_bus.paint();
+    }
+
+    //----------------------------------------------------------------------------
+    void synoptic_local_bus_listener::cancel(void)
+    {
+      m_bus.set_color_code(m_color_code,0xFF,0xFF,0);
       m_bus.paint();
     }
 

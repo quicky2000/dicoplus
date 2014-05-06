@@ -28,8 +28,9 @@ namespace dicoplus
   class dicoplus_types
   {
   public:
-    typedef sc_bv<dicoplus_configuration::m_global_cmd_nb_bits > t_global_cmd_type;
+    typedef sc_bv<dicoplus_configuration::m_global_cmd_nb_bits> t_global_cmd_type;
     typedef sc_bv<dicoplus_configuration::m_characters_nb_bits> t_global_data_type;
+
     typedef enum 
       {
 	UNINITIALIZED=0,
@@ -48,7 +49,17 @@ namespace dicoplus
         MATCHED_NOT_FIRST,
         ATTACHED_NOT_FIRST
       } t_cell_FSM_state;
+
     inline static const std::string cell_FSM_state2string(const t_cell_FSM_state & p_state);
+
+    typedef enum
+      {
+	LOCAL_MESSAGE_NOT_VALID,
+	LOCAL_MESSAGE_VALID,
+	LOCAL_MESSAGE_CANCEL
+      } t_local_message_content;
+    
+    inline static const std::string local_message_content2string(const t_local_message_content & p_message);
   private:
   };
 
@@ -109,6 +120,30 @@ namespace dicoplus
           break;
         }
     }
+
+  //----------------------------------------------------------------------------
+  const std::string dicoplus_types::local_message_content2string(const t_local_message_content & p_message)
+    {
+      switch(p_message)
+	{
+	case LOCAL_MESSAGE_NOT_VALID:
+	  return "LOCAL_MESSAGE_NOT_VALID";
+	  break;
+	case LOCAL_MESSAGE_VALID:
+	  return "LOCAL_MESSAGE_VALID";
+	  break;
+	case LOCAL_MESSAGE_CANCEL:
+	  return "LOCAL_MESSAGE_CANCEL";
+	  break;
+	default:
+	  std::stringstream l_stream;
+	  l_stream << p_message;
+          throw quicky_exception::quicky_logic_exception("No string representation for local message content \""+l_stream.str()+"\"",__LINE__,__FILE__);
+	  break;
+	}
+    }
+
 }
+
 #endif // _DICOPLUS_TYPES_H_
 //EOF

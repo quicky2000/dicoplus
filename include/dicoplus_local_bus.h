@@ -28,7 +28,7 @@ namespace dicoplus
   public:
     inline dicoplus_local_bus(const std::string & p_name);
     sc_signal<bool> m_valid;
-    sc_signal<bool> m_data;
+    sc_signal<sc_bv<2> > m_data;
   private:
   };
 

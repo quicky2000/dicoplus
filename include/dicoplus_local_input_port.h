@@ -28,10 +28,10 @@ namespace dicoplus
     inline dicoplus_local_input_port(const std::string & p_name);
     inline void operator () (dicoplus_local_bus  & p_bus);
     inline bool is_valid(void)const;
-    inline bool get_data(void)const;
+    inline sc_bv<2> get_data(void)const;
   private:
     sc_in<bool> m_valid;
-    sc_in<bool> m_data;
+    sc_in<sc_bv<2> > m_data;
   };
 
   //----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ namespace dicoplus
       }
 
     //----------------------------------------------------------------------------
-    bool dicoplus_local_input_port::get_data(void)const
+    sc_bv<2> dicoplus_local_input_port::get_data(void)const
       {
 	return m_data.read();
       }

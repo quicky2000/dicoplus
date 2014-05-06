@@ -25,6 +25,7 @@ namespace dicoplus
   public:
     virtual void no_activity(void)=0;
     virtual void data(bool p_data)=0;
+    virtual void cancel(void)=0;
     inline virtual ~dicoplus_local_bus_listener_if(void){}
   private:
   };
