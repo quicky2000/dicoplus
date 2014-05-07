@@ -688,7 +688,7 @@ namespace dicoplus
                   print_internal_state();
                 }
 #endif // DEBUG_DICOPLUS_CELL
-              if(POTENTIAL_FIRST == m_state_first_candidate && 1 == l_nb_valid)
+              if((POTENTIAL_FIRST == m_state_first_candidate || FIRST == m_state_first_candidate) && 1 == l_nb_valid)
                 {
                   set_state_first_FSM(FIRST);
                   for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
