@@ -136,7 +136,9 @@ namespace dicoplus
 
     inline void set_state_first_FSM(const t_first_FSM_state & p_state);
     inline void set_state_not_first_FSM(const t_not_first_FSM_state & p_state);
-
+    
+    inline static const std::string not_first_local_link_state2string(const t_not_first_local_link_state & p_state);
+    inline static const std::string first_local_link_state2string(const t_first_local_link_state & p_state);
     inline static const std::string orientation2string(const t_orientation & p_state);
     inline static const std::string state_first_candidate2string(const t_first_FSM_state & p_state);
     inline static const std::string state_not_first_candidate2string(const t_not_first_FSM_state & p_state);
@@ -307,6 +309,11 @@ namespace dicoplus
       std::cout << "\tInternal state : \t\t" << common_FSM_state2string(m_internal_state) << std::endl ;
       std::cout << "\tFirst candidate state :\t\t" << state_first_candidate2string(m_state_first_candidate) << std::endl ;
       std::cout << "\tNot first candidate state :\t" << state_not_first_candidate2string(m_state_not_first_candidate) << std::endl ;
+      for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
+	{
+	  std::cout << std::string(name()) << " : " << orientation2string((t_orientation)l_orientation) << "\t: " << first_local_link_state2string(m_first_local_link_states[l_orientation]) << "\t" << not_first_local_link_state2string(m_not_first_local_link_states[l_orientation]) << std::endl;
+	}
+      
       std::cout << std::endl ;
     }
 
@@ -693,7 +700,7 @@ namespace dicoplus
                     }
                 }
 
-              if(MATCHED_NOT_FIRST == m_state_not_first_candidate && 1 == l_nb_valid)
+              if((MATCHED_NOT_FIRST == m_state_not_first_candidate || ATTACHED_NOT_FIRST == m_state_not_first_candidate) && 1 == l_nb_valid)
                 {
                   set_state_not_first_FSM(ATTACHED_NOT_FIRST);
                   for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
@@ -1065,6 +1072,50 @@ namespace dicoplus
           }
       }
 
+
+    //--------------------------------------------------------------------------
+    const std::string dicoplus_cell::not_first_local_link_state2string(const dicoplus_cell::t_not_first_local_link_state & p_state)
+      {
+        switch(p_state)
+          {
+          case NOT_FIRST_NONE:
+            return "NOT_FIRST_NONE";
+            break;
+          case NOT_FIRST_NEXT:
+            return "NOT_FIRST_NEXT";
+            break;
+          case NOT_FIRST_PREVIOUS:
+            return "NOT_FIRST_PREVIOUS";
+            break;
+          case NOT_FIRST_PREVIOUS_RELOADED:
+            return "NOT_FIRST_PREVIOUS_RELOADED";
+            break;
+          default:
+            std::stringstream l_stream;
+            l_stream << p_state;
+            throw quicky_exception::quicky_logic_exception("No string representation for not first local link state \""+l_stream.str()+"\"",__LINE__,__FILE__);
+            break;
+          }
+      }
+
+    //--------------------------------------------------------------------------
+    const std::string dicoplus_cell::first_local_link_state2string(const dicoplus_cell::t_first_local_link_state & p_state)
+      {
+        switch(p_state)
+          {
+          case FIRST_NONE:
+            return "FIRST_NONE";
+            break;
+          case FIRST_NEXT:
+            return "FIRST_NEXT";
+            break;
+          default:
+            std::stringstream l_stream;
+            l_stream << p_state;
+            throw quicky_exception::quicky_logic_exception("No string representation for first local link state \""+l_stream.str()+"\"",__LINE__,__FILE__);
+            break;
+          }
+      }
   
 }
 #endif // _DICOPLUS_CELL_H_
