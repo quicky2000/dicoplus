@@ -212,6 +212,11 @@ namespace dicoplus
   
           }
 
+	if(!m_word_list.size())
+	  {
+	    throw quicky_exception::quicky_logic_exception("Word list is empty",__LINE__,__FILE__);
+	  }
+
         // Printing list of words
         for(std::vector<std::string>::const_iterator l_iter = m_word_list.begin() ; 
             l_iter != m_word_list.end();
