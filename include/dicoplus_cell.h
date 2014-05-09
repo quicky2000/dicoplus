@@ -639,6 +639,9 @@ namespace dicoplus
                       }
                   }
                   break;
+		case MATCHED_NOT_FIRST:
+		  // Nothing to do
+		  break;
                 default:
                   throw quicky_exception::quicky_logic_exception(std::string(name())+" : Unhandled not_first candidate state to receive a cancel message : \""+state_not_first_candidate2string(m_state_not_first_candidate)+"\" in cell \""+name()+"\"",__LINE__,__FILE__);
                   break;
