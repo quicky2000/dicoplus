@@ -1,5 +1,5 @@
 /*    This file is part of dicoplus
-      The aim of this software is to solvde dicoplus game
+      The aim of this software is to solve dicoplus game
       Copyright (C) 2014  Julien Thevenon ( julien_thevenon at yahoo.fr )
 
       This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 #ifndef _DICOPLUS_CONFIGURATION_H_
 #define _DICOPLUS_CONFIGURATION_H_
 
-#include "systemc_utils.h"
+#include "quicky_utils.h"
 
 namespace dicoplus
 {
@@ -27,8 +27,8 @@ namespace dicoplus
   public:
     static const unsigned int m_nb_characters = 43;
     static const unsigned int m_nb_global_cmd = 4;
-    static const unsigned int m_global_cmd_nb_bits = systemc_utils::systemc_utils<dicoplus_configuration::m_nb_global_cmd>::m_nb_bits_for_nb_values;
-    static const unsigned int m_characters_nb_bits = systemc_utils::systemc_utils<dicoplus_configuration::m_nb_characters>::m_nb_bits_for_nb_values;
+    static const unsigned int m_global_cmd_nb_bits = quicky_utils::quicky_utils<dicoplus_configuration::m_nb_global_cmd>::m_nb_bits_for_nb_values;
+    static const unsigned int m_characters_nb_bits = quicky_utils::quicky_utils<dicoplus_configuration::m_nb_characters>::m_nb_bits_for_nb_values;
   private:
   };
 }
