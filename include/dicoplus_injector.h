@@ -79,6 +79,7 @@ namespace dicoplus
     std::queue<dicoplus_types::t_global_data_type> * m_grid_content;
     std::vector<dicoplus_types::t_global_data_type> * m_word_list;
     bool m_ready2send_new_char;
+    unsigned int m_remaining_separators;
   };
 
   //----------------------------------------------------------------------------
@@ -134,7 +135,8 @@ namespace dicoplus
     m_spy_probe("spy_probe",m_spy_listener),
     m_grid_content(NULL),
     m_word_list(NULL),
-    m_ready2send_new_char(false)
+    m_ready2send_new_char(false),
+    m_remaining_separators(0)
       {
 	m_global_port_manager.m_clk(m_clk);
 
@@ -182,6 +184,8 @@ namespace dicoplus
 	{
 	  wait();
 	}
+
+      ++m_remaining_separators;
       m_global_port_manager.post_message(*new dicoplus_global_message_separator());
 
       while(!m_global_port_manager.output_box_empty())
@@ -207,12 +211,13 @@ namespace dicoplus
 	    }
 	  else
 	    {
+	      ++m_remaining_separators;
 	      m_global_port_manager.post_message(*new dicoplus_global_message_separator());
 	    }
 	}
 
       std::cout << name() << " : Starting final loop" << std::endl ;
-      for(uint l_index = 0 ; l_index < 2000 ; ++l_index)
+      while(m_remaining_separators)
 	{
 	  wait();
 	}
@@ -232,7 +237,8 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     void dicoplus_injector::treat(const dicoplus_global_message_separator & p_message)
     {
-      std::cout << name() << " : Treat separator message @ " << sc_time_stamp() << std::endl ;
+      --m_remaining_separators;
+      std::cout << name() << " : Treat separator message @ " << sc_time_stamp() << " : " << m_remaining_separators << " remainings" << std::endl ;
     }
 
 }
