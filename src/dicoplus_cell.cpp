@@ -20,6 +20,7 @@
 namespace dicoplus
 {
   dicoplus_cell::t_rep_map dicoplus_cell::m_representations;
+  std::ofstream dicoplus_cell::m_status_file;
 
 }
 //EOF

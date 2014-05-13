@@ -20,6 +20,7 @@
 #define _STATIC_MANAGER_H_
 
 #include "dicoplus_char.h"
+#include "dicoplus_cell.h"
 #include "dicoplus_synoptic_cell.h"
 #include "dicoplus_synoptic_char.h"
 #include "dicoplus_synoptic_H_bus.h"
@@ -40,6 +41,7 @@ namespace dicoplus
     {
       std::cout << "Static initialisation started" << std::endl;
       dicoplus_char::init();
+      dicoplus_cell::init();
       dicoplus_synoptic_char::init();
       dicoplus_synoptic_cell::compute_dim();
       dicoplus_synoptic_H_bus::init();
@@ -53,6 +55,7 @@ namespace dicoplus
     {
       std::cout << "Static destruction started" << std::endl;
       dicoplus_char::clear();
+      dicoplus_cell::terminate();
       std::cout << "Static destruction done" << std::endl ;
     }
 }

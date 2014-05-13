@@ -59,6 +59,9 @@ namespace dicoplus
     sc_in<bool> m_clk;
 
     inline ~dicoplus_cell(void);
+
+    inline static void init(void);
+    inline static void terminate(void);
   private:
     inline void run(void);
 
@@ -144,7 +147,7 @@ namespace dicoplus
     inline static const std::string state_not_first_candidate2string(const t_not_first_FSM_state & p_state);
     inline static const std::string common_FSM_state2string(const t_common_FSM_state & p_state);
 
-    inline void print_internal_state(void)const;
+    inline void print_internal_state(std::ostream & p_stream = std::cout)const;
     inline void align_internal_state(void);
 
     inline static void add_representation(const t_common_FSM_state & p_common_state,
@@ -171,6 +174,7 @@ namespace dicoplus
 
     typedef std::map<std::pair<t_common_FSM_state,std::pair<t_first_FSM_state,t_not_first_FSM_state> >,dicoplus_types::t_cell_FSM_state> t_rep_map;
     static t_rep_map m_representations;
+    static ofstream m_status_file;
   };
 
   //----------------------------------------------------------------------------
@@ -190,39 +194,6 @@ namespace dicoplus
     m_state_not_first_candidate(UNKNOWN_NOT_FIRST),
     m_gdb_debug(false)
       {
-
-        if(!m_representations.size())
-          {
-            add_representation(COMMON_INITIALIZED,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::INITIALIZED);
-            add_representation(COMMON_READY2START,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::READY2START);
-            add_representation(COMMON_READY2START,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_READY2START,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::MATCHED_NOT_FIRST);
-            add_representation(COMMON_READY2START,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::ATTACHED_NOT_FIRST);
-            add_representation(COMMON_START_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::START_POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST,POTENTIAL_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::FIRST);
-            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,MATCHING_NOT_FIRST,dicoplus_types::MATCHING_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::MATCHED_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::ATTACHED_NOT_FIRST);
-            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::NOT_FIRST);
-            add_representation(COMMON_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
-            add_representation(COMMON_CONFIRMED,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::CONFIRMED_FIRST);
-            add_representation(COMMON_CONFIRMED,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::CONFIRMED_MIDDLE);
-            add_representation(COMMON_CONFIRMED,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::CONFIRMED_LAST);
-          }
 
 	m_global_port_manager.m_clk(m_clk);
 
@@ -304,17 +275,18 @@ namespace dicoplus
     }
 
     //----------------------------------------------------------------------------
-    void dicoplus_cell::print_internal_state(void)const
+    void dicoplus_cell::print_internal_state(std::ostream & p_stream)const
     {
-      std::cout << "\tInternal state : \t\t" << common_FSM_state2string(m_internal_state) << std::endl ;
-      std::cout << "\tFirst candidate state :\t\t" << state_first_candidate2string(m_state_first_candidate) << std::endl ;
-      std::cout << "\tNot first candidate state :\t" << state_not_first_candidate2string(m_state_not_first_candidate) << std::endl ;
+      p_stream << std::string(name()) << std::endl ;
+      p_stream << "\tInternal state : \t\t" << common_FSM_state2string(m_internal_state) << std::endl ;
+      p_stream << "\tFirst candidate state :\t\t" << state_first_candidate2string(m_state_first_candidate) << std::endl ;
+      p_stream << "\tNot first candidate state :\t" << state_not_first_candidate2string(m_state_not_first_candidate) << std::endl ;
       for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
 	{
-	  std::cout << std::string(name()) << " : " << orientation2string((t_orientation)l_orientation) << "\t: " << first_local_link_state2string(m_first_local_link_states[l_orientation]) << "\t" << not_first_local_link_state2string(m_not_first_local_link_states[l_orientation]) << std::endl;
+	  p_stream << "\t" << orientation2string((t_orientation)l_orientation) << "\t: " << first_local_link_state2string(m_first_local_link_states[l_orientation]) << "\t" << not_first_local_link_state2string(m_not_first_local_link_states[l_orientation]) << std::endl;
 	}
       
-      std::cout << std::endl ;
+      p_stream << std::endl ;
     }
 
     //----------------------------------------------------------------------------
@@ -409,9 +381,9 @@ namespace dicoplus
 	  break;
         case COMMON_POTENTIAL_FIRST_NOT_FIRST:
         case COMMON_POTENTIAL_NOT_FIRST:
-          if(p_message.get_data() == m_content && (POTENTIAL_NOT_FIRST == m_state_not_first_candidate || POTENTIAL_NOT_FIRST_RELOADED == m_state_not_first_candidate))
+          if(p_message.get_data() == m_content && (POTENTIAL_NOT_FIRST == m_state_not_first_candidate || POTENTIAL_NOT_FIRST_RELOADED == m_state_not_first_candidate || ATTACHED_NOT_FIRST == m_state_not_first_candidate))
             {
-              set_state_not_first_FSM(MATCHING_NOT_FIRST);
+              if(ATTACHED_NOT_FIRST != m_state_not_first_candidate) set_state_not_first_FSM(MATCHING_NOT_FIRST);
               m_local_output_port.send_data(true);
             }
           else
@@ -455,8 +427,9 @@ namespace dicoplus
           // Information is transmitted to following cells
 	  m_global_port_manager.post_message(p_message);
 	  break;
+	case COMMON_POTENTIAL_FIRST_NOT_FIRST:
 	case COMMON_POTENTIAL_NOT_FIRST :
-          if(ATTACHED_NOT_FIRST == m_state_not_first_candidate || MATCHED_NOT_FIRST == m_state_not_first_candidate)
+          if(ATTACHED_NOT_FIRST == m_state_not_first_candidate || MATCHED_NOT_FIRST == m_state_not_first_candidate || FIRST == m_state_first_candidate)
             {
               set_internal_state(COMMON_CONFIRMED);
             }
@@ -583,7 +556,7 @@ namespace dicoplus
                     if(!l_remaining_valid_links)
                       {
                         set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
-                        set_internal_state(COMMON_NOT_FIRST);
+			set_internal_state(COMMON_POTENTIAL_NOT_FIRST == m_internal_state ? COMMON_NOT_FIRST : COMMON_POTENTIAL_FIRST);
                       }
                   }
                       
@@ -608,7 +581,7 @@ namespace dicoplus
                     if(!l_remaining_valid_links)
                       {
                         set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
-                        set_internal_state(COMMON_NOT_FIRST);
+			set_internal_state(COMMON_POTENTIAL_NOT_FIRST == m_internal_state ? COMMON_NOT_FIRST : COMMON_POTENTIAL_FIRST);
                       }
                   }
                   break;
@@ -634,7 +607,7 @@ namespace dicoplus
                     if(!l_remaining_valid_links)
                       {
                         set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
-                        set_internal_state(COMMON_NOT_FIRST);
+			set_internal_state(COMMON_POTENTIAL_NOT_FIRST == m_internal_state ? COMMON_NOT_FIRST : COMMON_POTENTIAL_FIRST);
                         m_local_output_port.cancel();
                       }
                   }
@@ -745,7 +718,10 @@ namespace dicoplus
                     }
                   break;
                 case COMMON_POTENTIAL_FIRST:
-                  // Nothing to do : managed by first state FSM
+                  if(l_nb_valid)
+		    {
+		      set_internal_state(COMMON_POTENTIAL_FIRST_NOT_FIRST);
+		    }
                   break;
                 case COMMON_NOT_FIRST:
                   // One of my next neighbour just match a char message so
@@ -873,7 +849,7 @@ namespace dicoplus
                       // The latest matched character didn't receive any neighbour
                       // validation so it must be reverted
                       set_state_not_first_FSM(UNKNOWN_NOT_FIRST);
-                      set_internal_state(COMMON_NOT_FIRST);
+                      set_internal_state(COMMON_POTENTIAL_NOT_FIRST == m_internal_state ? COMMON_NOT_FIRST : COMMON_POTENTIAL_FIRST);
 
                       // Send invalid message to predecessors
                       m_local_output_port.cancel();
@@ -973,6 +949,7 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     dicoplus_cell::~dicoplus_cell(void)
       {
+	print_internal_state(m_status_file);
         for(unsigned int l_orientation = NORTH; l_orientation < WEST + 1; ++l_orientation)
           {
             delete m_local_input_ports[l_orientation];
@@ -1119,6 +1096,66 @@ namespace dicoplus
             break;
           }
       }
+
+    //--------------------------------------------------------------------------
+    void dicoplus_cell::init(void)
+    {
+        if(!m_representations.size())
+          {
+            add_representation(COMMON_INITIALIZED,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::INITIALIZED);
+            add_representation(COMMON_READY2START,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::READY2START);
+            add_representation(COMMON_READY2START,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_READY2START,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::MATCHED_NOT_FIRST);
+            add_representation(COMMON_READY2START,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::ATTACHED_NOT_FIRST);
+            add_representation(COMMON_START_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::START_POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST,POTENTIAL_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,POTENTIAL_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_FIRST_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,MATCHING_NOT_FIRST,dicoplus_types::FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,MATCHED_NOT_FIRST,dicoplus_types::MATCHED_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,ATTACHED_NOT_FIRST,dicoplus_types::ATTACHED_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::FIRST);
+            add_representation(COMMON_POTENTIAL_FIRST_NOT_FIRST,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,MATCHING_NOT_FIRST,dicoplus_types::MATCHING_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::MATCHED_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::ATTACHED_NOT_FIRST);
+            add_representation(COMMON_POTENTIAL_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_NOT_FIRST,UNKNOWN_FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::NOT_FIRST);
+            add_representation(COMMON_NOT_FIRST,UNKNOWN_FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::POTENTIAL_NOT_FIRST);
+            add_representation(COMMON_CONFIRMED,FIRST,UNKNOWN_NOT_FIRST,dicoplus_types::CONFIRMED_FIRST);
+            add_representation(COMMON_CONFIRMED,UNKNOWN_FIRST,ATTACHED_NOT_FIRST,dicoplus_types::CONFIRMED_MIDDLE);
+            add_representation(COMMON_CONFIRMED,FIRST,ATTACHED_NOT_FIRST,dicoplus_types::CONFIRMED_MIDDLE);
+            add_representation(COMMON_CONFIRMED,FIRST,POTENTIAL_NOT_FIRST,dicoplus_types::CONFIRMED_MIDDLE);
+            add_representation(COMMON_CONFIRMED,FIRST,POTENTIAL_NOT_FIRST_RELOADED,dicoplus_types::CONFIRMED_MIDDLE);
+            add_representation(COMMON_CONFIRMED,UNKNOWN_FIRST,MATCHED_NOT_FIRST,dicoplus_types::CONFIRMED_LAST);
+
+	    m_status_file.open("status.log");
+	    if(!m_status_file)
+	      {
+		throw quicky_exception::quicky_logic_exception("Unable to create status.log file",__LINE__,__FILE__);
+	      }
+          }
+	else
+	  {
+	    throw quicky_exception::quicky_logic_exception("dicoplus_cell representation already initialised",__LINE__,__FILE__);
+
+	  }
+    }
+
+    //--------------------------------------------------------------------------
+    void dicoplus_cell::terminate(void)
+    {
+      m_status_file.close();
+    }
   
 }
 #endif // _DICOPLUS_CELL_H_
