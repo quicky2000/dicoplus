@@ -1,0 +1,5 @@
+Category : incomplete word
+Word : HELLO
+Only the first letter of searched world is present.
+The aim is to verify that its matching will be cancelled as the following letters of the word are missing
+#EOF

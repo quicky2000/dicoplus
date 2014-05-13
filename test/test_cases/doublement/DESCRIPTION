@@ -1,0 +1,6 @@
+Category : single word
+Word : DOUBLEMENT
+Word's letter are located in such a manner that 2 'E' characters are neighbour of 'L' character and also have their following letter 'M' as neighbour.
+Only one is good because it can be continue with the 'N' character.
+The complete word sould be matched at the end the text
+#EOF

@@ -1,0 +1,6 @@
+Category : single word
+Word : FLAGADA
+Word's letter are located in such a manner that 2 'A' characters are neighbour of 'L' character and also have their following letter 'G' as neighbour.
+Only one is good because it allowa to match the complete word
+The complete word sould be matched at the end the text
+#EOF
