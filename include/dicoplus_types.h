@@ -60,6 +60,17 @@ namespace dicoplus
       } t_local_message_content;
     
     inline static const std::string local_message_content2string(const t_local_message_content & p_message);
+
+    typedef enum
+      {
+        NORTH=0,
+        EAST,
+        SOUTH,
+        WEST
+      } t_orientation;
+
+    inline static const std::string orientation2string(const t_orientation & p_state);
+
   private:
   };
 
@@ -139,6 +150,31 @@ namespace dicoplus
 	  std::stringstream l_stream;
 	  l_stream << p_message;
           throw quicky_exception::quicky_logic_exception("No string representation for local message content \""+l_stream.str()+"\"",__LINE__,__FILE__);
+	  break;
+	}
+    }
+
+  //----------------------------------------------------------------------------
+  const std::string dicoplus_types::orientation2string(const t_orientation & p_orientation)
+    {
+      switch(p_orientation)
+	{
+	case NORTH:
+	  return "NORTH";
+	  break;
+	case EAST:
+	  return "EAST";
+	  break;
+	case SOUTH:
+	  return "SOUTH";
+	  break;
+	case WEST:
+	  return "WEST";
+	  break;
+	default:
+	  std::stringstream l_stream;
+	  l_stream << p_orientation;
+	  throw quicky_exception::quicky_logic_exception("No string representation for orientation \""+l_stream.str()+"\"",__LINE__,__FILE__);
 	  break;
 	}
     }
