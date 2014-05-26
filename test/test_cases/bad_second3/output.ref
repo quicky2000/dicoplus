@@ -1,0 +1,108 @@
+top.dicoplus.Cell_0_0 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_0_1 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_0_2 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_0_3 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_1_0 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_1_1 : 'H'
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_1_2 : 'E'
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_1_3 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_2_0 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_2_1 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_2_2 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_2_3 : ' '
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+

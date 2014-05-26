@@ -1,0 +1,5 @@
+Category : word context
+Words : FOURMILIER
+The word can only be matched if the same letter is used twice which is not authorised because a character cannot be both predecessor and successor
+At the end of the test no character should be matched
+#EOF

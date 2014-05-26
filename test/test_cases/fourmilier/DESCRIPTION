@@ -1,0 +1,5 @@
+Category : word context
+Words : FOURMILIER
+There are 2 different 'L' candidates but one is not good because the following matching letter is also the previous one. It should be discarded because a character cannot be both predecessor and successor
+At the end of the test only the word should be matched
+#EOF
