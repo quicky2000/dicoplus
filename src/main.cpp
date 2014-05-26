@@ -35,7 +35,7 @@ int sc_main(int argc,char ** argv)
       // Treating parameters
       l_param_manager.treat_parameters(argc,argv);
 
-      if(!l_refresh_delay.value_set()) l_refresh_delay.set_text_value("1");
+      if(!l_refresh_delay.value_set()) l_refresh_delay.set_text_value("0");
 
       dicoplus::static_manager l_static_manager;
       dicoplus::top l_top("top",l_input_file.get_value<std::string>(),l_refresh_delay.get_value<uint32_t>());

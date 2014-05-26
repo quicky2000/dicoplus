@@ -49,13 +49,13 @@ namespace dicoplus
 	      m_dicoplus.attach_global_bus_listener(l_x_index,l_y_index,m_grid.get_global_bus(l_x_index,l_y_index));
 	      if(l_x_index)
                 {
-                  m_dicoplus.attach_local_bus_listener(l_x_index - 1,l_y_index,m_grid.get_west_listener(l_x_index,l_y_index));
-                  m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index,m_grid.get_east_listener(l_x_index,l_y_index));
+                  m_dicoplus.attach_local_bus_listener(l_x_index - 1,l_y_index,dicoplus_types::WEST,m_grid.get_west_listener(l_x_index,l_y_index));
+                  m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index,dicoplus_types::EAST,m_grid.get_east_listener(l_x_index,l_y_index));
                 }
 	      if(l_y_index + 1 < m_dicoplus.get_height())
                 {
-                  m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index,m_grid.get_north_listener(l_x_index,l_y_index));
-                  m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index + 1,m_grid.get_south_listener(l_x_index,l_y_index));
+                  m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index,dicoplus_types::NORTH,m_grid.get_north_listener(l_x_index,l_y_index));
+                  m_dicoplus.attach_local_bus_listener(l_x_index,l_y_index + 1,dicoplus_types::SOUTH,m_grid.get_south_listener(l_x_index,l_y_index));
                 }
 
 	    }

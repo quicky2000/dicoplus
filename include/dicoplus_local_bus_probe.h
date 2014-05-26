@@ -22,7 +22,6 @@
 #include "dicoplus_local_bus_listener_if.h"
 #include "quicky_exception.h"
 #include "systemc.h"
-#include <vector>
 
 namespace dicoplus
 {
@@ -33,7 +32,6 @@ namespace dicoplus
     inline dicoplus_local_bus_probe(sc_module_name p_name,
 				    dicoplus_local_bus_listener_if & p_listener);
     inline void operator () (const dicoplus_local_bus  & p_bus);
-    inline void attach_listener(dicoplus_local_bus_listener_if & p_listener);
     sc_in<bool> m_clock;
   private:
     void run(void);
@@ -41,7 +39,7 @@ namespace dicoplus
     sc_in<bool> m_valid;
     sc_in<sc_bv<2> > m_data;
     bool m_previous_valid;
-    std::vector<dicoplus_local_bus_listener_if *> m_listeners;
+    dicoplus_local_bus_listener_if & m_listener;
   };
 
   //------------------------------------------------------------
@@ -51,13 +49,12 @@ namespace dicoplus
     m_clock("clock"),
     m_valid("valid"),
     m_data("data"),
-    m_previous_valid(false)
+    m_previous_valid(false),
+    m_listener(p_listener)
     {
       SC_METHOD(run);
       dont_initialize();
       sensitive << m_clock.pos();
-
-      m_listeners.push_back(&p_listener);
     }
 
     //------------------------------------------------------------
@@ -68,46 +65,35 @@ namespace dicoplus
     }
 
     //------------------------------------------------------------
-    void dicoplus_local_bus_probe::attach_listener(dicoplus_local_bus_listener_if & p_listener)
-    {
-      m_listeners.push_back(&p_listener);
-    }
-
-    //------------------------------------------------------------
     void dicoplus_local_bus_probe::run(void)
     {
 
       if(m_valid.read() != m_previous_valid)
         {
           m_previous_valid = m_valid.read();
-          for(std::vector<dicoplus_local_bus_listener_if*>::iterator l_iter = m_listeners.begin();
-              m_listeners.end() != l_iter;
-              ++l_iter)
-            {
-              if(!m_valid.read())
-                {
-                  (*l_iter)->no_activity();
-                }
-              else
-                {
-		  switch(m_data.read().to_uint())
-		    {
-		    case dicoplus_types::LOCAL_MESSAGE_NOT_VALID :
-		      (*l_iter)->data(false);
-		      break;
-		    case dicoplus_types::LOCAL_MESSAGE_VALID:
-		      (*l_iter)->data(true);
-		      break;
-		    case dicoplus_types::LOCAL_MESSAGE_CANCEL :
-		      (*l_iter)->cancel();
-		      break;
-		    default:
-		      {
-			throw quicky_exception::quicky_logic_exception("Unhandled data value"+dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_data.read().to_uint())+" from probe \""+std::string(name()),__LINE__,__FILE__);
-		      }
-		    }
-                }
-            }
+	  if(!m_valid.read())
+	    {
+	      m_listener.no_activity();
+	    }
+	  else
+	    {
+	      switch(m_data.read().to_uint())
+		{
+		case dicoplus_types::LOCAL_MESSAGE_NOT_VALID :
+		  m_listener.data(false);
+		  break;
+		case dicoplus_types::LOCAL_MESSAGE_VALID:
+		  m_listener.data(true);
+		  break;
+		case dicoplus_types::LOCAL_MESSAGE_CANCEL :
+		  m_listener.cancel();
+		  break;
+		default:
+		  {
+		    throw quicky_exception::quicky_logic_exception("Unhandled data value"+dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_data.read().to_uint())+" from probe \""+std::string(name()),__LINE__,__FILE__);
+		  }
+		}
+	    }
         }
 
     }

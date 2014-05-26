@@ -1,630 +1,630 @@
-top.dicoplus.Cell_0_0
+top.dicoplus.Cell_0_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_0_1
+top.dicoplus.Cell_0_1 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_0_2
+top.dicoplus.Cell_0_2 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_0_3
+top.dicoplus.Cell_0_3 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_0_4
+top.dicoplus.Cell_0_4 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_0_5
+top.dicoplus.Cell_0_5 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_0_6
+top.dicoplus.Cell_0_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_1_0
+top.dicoplus.Cell_1_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_1_1
+top.dicoplus.Cell_1_1 : 'L'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_1_2
+top.dicoplus.Cell_1_2 : 'U'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_1_3
+top.dicoplus.Cell_1_3 : 'E'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_1_4
+top.dicoplus.Cell_1_4 : 'N'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_1_5
+top.dicoplus.Cell_1_5 : 'G'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_1_6
+top.dicoplus.Cell_1_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_2_0
+top.dicoplus.Cell_2_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_2_1
+top.dicoplus.Cell_2_1 : 'O'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: Cfd
+	SOUTH	: 	EAST-> LINK_CONFIRMED	
+	WEST	: 
 
-top.dicoplus.Cell_2_2
+top.dicoplus.Cell_2_2 : 'U'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: Cfd
+	EAST	: 	NORTH-> LINK_CONFIRMED	
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_2_3
+top.dicoplus.Cell_2_3 : 'V'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 	SOUTH-> LINK_CONFIRMED	
+	SOUTH	: Cfd
+	WEST	: 
 
-top.dicoplus.Cell_2_4
+top.dicoplus.Cell_2_4 : 'O'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NEXT
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 	SOUTH-> LINK_CONFIRMED	
+	EAST	: 
+	SOUTH	: Cfd
+	WEST	: 
 
-top.dicoplus.Cell_2_5
+top.dicoplus.Cell_2_5 : 'J'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NEXT	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: FIRST : LINK_CONFIRMED
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_2_6
+top.dicoplus.Cell_2_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_3_0
+top.dicoplus.Cell_3_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_3_1
+top.dicoplus.Cell_3_1 : 'F'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		FIRST
-	Not first candidate state :	POTENTIAL_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NEXT	NOT_FIRST_NONE
-	WEST	: FIRST_NEXT	NOT_FIRST_NONE
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: FIRST : LINK_CONFIRMED
 
-top.dicoplus.Cell_3_2
+top.dicoplus.Cell_3_2 : 'R'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
+	NORTH	: 
+	EAST	: 	WEST-> LINK_CONFIRMED	
+	SOUTH	: 
+	WEST	: Cfd
 
-top.dicoplus.Cell_3_3
+top.dicoplus.Cell_3_3 : 'I'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
+	NORTH	: 
+	EAST	: 	WEST-> LINK_CONFIRMED	
+	SOUTH	: 
+	WEST	: Cfd
 
-top.dicoplus.Cell_3_4
+top.dicoplus.Cell_3_4 : 'P'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_3_5
+top.dicoplus.Cell_3_5 : 'A'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_3_6
+top.dicoplus.Cell_3_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_4_0
+top.dicoplus.Cell_4_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_4_1
+top.dicoplus.Cell_4_1 : 'E'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_4_2
+top.dicoplus.Cell_4_2 : 'M'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_NEXT
+	NORTH	: 
+	EAST	: 	WEST-> LINK_CONFIRMED	
+	SOUTH	: 
+	WEST	: Cfd
 
-top.dicoplus.Cell_4_3
+top.dicoplus.Cell_4_3 : 'A'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 	WEST-> LINK_CONFIRMED	
+	WEST	: Cfd
 
-top.dicoplus.Cell_4_4
+top.dicoplus.Cell_4_4 : 'L'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: Cfd
+	EAST	: 	NORTH-> LINK_CONFIRMED	
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_4_5
+top.dicoplus.Cell_4_5 : 'S'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_4_6
+top.dicoplus.Cell_4_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_5_0
+top.dicoplus.Cell_5_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_5_1
+top.dicoplus.Cell_5_1 : 'L'
+	Internal state : 		COMMON_READY2START
+	First candidate state :		UNKNOWN_FIRST
+	Not first candidate state :	UNKNOWN_NOT_FIRST
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
+
+top.dicoplus.Cell_5_2 : 'I'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 	WEST-> LINK_CONFIRMED	
+	WEST	: Cfd
 
-top.dicoplus.Cell_5_2
+top.dicoplus.Cell_5_3 : 'L'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NEXT
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
+	NORTH	: Cfd
+	EAST	: 	NORTH-> LINK_CONFIRMED	
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_5_3
+top.dicoplus.Cell_5_4 : 'E'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NEXT
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_NEXT
+	NORTH	: 
+	EAST	: 	WEST-> LINK_CONFIRMED	
+	SOUTH	: 
+	WEST	: Cfd
 
-top.dicoplus.Cell_5_4
-	Internal state : 		COMMON_CONFIRMED
-	First candidate state :		UNKNOWN_FIRST
-	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
-
-top.dicoplus.Cell_5_5
+top.dicoplus.Cell_5_5 : 'O'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_5_6
+top.dicoplus.Cell_5_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_6_0
+top.dicoplus.Cell_6_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_6_1
+top.dicoplus.Cell_6_1 : 'R'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	MATCHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: Cfd
+	WEST	: 
 
-top.dicoplus.Cell_6_2
+top.dicoplus.Cell_6_2 : 'E'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NEXT
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
+	NORTH	: 	SOUTH-> LINK_CONFIRMED	
+	EAST	: 
+	SOUTH	: Cfd
+	WEST	: 
 
-top.dicoplus.Cell_6_3
+top.dicoplus.Cell_6_3 : 'I'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NEXT
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NEXT
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
+	NORTH	: 	WEST-> LINK_CONFIRMED	
+	EAST	: 
+	SOUTH	: 
+	WEST	: Cfd
 
-top.dicoplus.Cell_6_4
+top.dicoplus.Cell_6_4 : 'M'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NEXT
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NEXT
+	NORTH	: 
+	EAST	: 	WEST-> LINK_CONFIRMED	
+	SOUTH	: 
+	WEST	: Cfd
 
-top.dicoplus.Cell_6_5
+top.dicoplus.Cell_6_5 : 'R'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_6_6
+top.dicoplus.Cell_6_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_7_0
+top.dicoplus.Cell_7_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_7_1
+top.dicoplus.Cell_7_1 : 'E'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_7_2
+top.dicoplus.Cell_7_2 : 'T'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	MATCHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: Cfd
+	WEST	: 
 
-top.dicoplus.Cell_7_3
+top.dicoplus.Cell_7_3 : 'N'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NEXT
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_PREVIOUS
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 	SOUTH-> LINK_CONFIRMED	
+	EAST	: 
+	SOUTH	: Cfd
+	WEST	: 
 
-top.dicoplus.Cell_7_4
+top.dicoplus.Cell_7_4 : 'E'
 	Internal state : 		COMMON_CONFIRMED
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	ATTACHED_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NEXT
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
+	NORTH	: 	WEST-> LINK_CONFIRMED	
+	EAST	: 
+	SOUTH	: 
+	WEST	: Cfd
 
-top.dicoplus.Cell_7_5
+top.dicoplus.Cell_7_5 : 'I'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_7_6
+top.dicoplus.Cell_7_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_8_0
+top.dicoplus.Cell_8_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_8_1
+top.dicoplus.Cell_8_1 : 'I'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_8_2
+top.dicoplus.Cell_8_2 : 'Y'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_PREVIOUS
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_8_3
+top.dicoplus.Cell_8_3 : 'B'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_8_4
+top.dicoplus.Cell_8_4 : 'C'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_8_5
+top.dicoplus.Cell_8_5 : 'S'
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_8_6
+top.dicoplus.Cell_8_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_9_0
+top.dicoplus.Cell_9_0 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_9_1
+top.dicoplus.Cell_9_1 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_9_2
+top.dicoplus.Cell_9_2 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_9_3
+top.dicoplus.Cell_9_3 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_9_4
+top.dicoplus.Cell_9_4 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_9_5
+top.dicoplus.Cell_9_5 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 
-top.dicoplus.Cell_9_6
+top.dicoplus.Cell_9_6 : ' '
 	Internal state : 		COMMON_READY2START
 	First candidate state :		UNKNOWN_FIRST
 	Not first candidate state :	UNKNOWN_NOT_FIRST
-	NORTH	: FIRST_NONE	NOT_FIRST_NONE
-	EAST	: FIRST_NONE	NOT_FIRST_NONE
-	SOUTH	: FIRST_NONE	NOT_FIRST_NONE
-	WEST	: FIRST_NONE	NOT_FIRST_NONE
+	NORTH	: 
+	EAST	: 
+	SOUTH	: 
+	WEST	: 
 

@@ -1,5 +1,5 @@
 /*    This file is part of dicoplus
-      The aim of this software is to solvde dicoplus game
+      The aim of this software is to solve dicoplus game
       Copyright (C) 2014  Julien Thevenon ( julien_thevenon at yahoo.fr )
 
       This program is free software: you can redistribute it and/or modify
@@ -36,18 +36,16 @@ namespace dicoplus
 	UNINITIALIZED=0,
 	INITIALIZED,
 	READY2START,
-	POTENTIAL_FIRST,
-	START_POTENTIAL_NOT_FIRST,
-	POTENTIAL_NOT_FIRST,
-	POTENTIAL_FIRST_NOT_FIRST,
-	NOT_FIRST,
-	CONFIRMED_FIRST,
-	FIRST,
-	CONFIRMED_MIDDLE,
-	CONFIRMED_LAST,
-        MATCHING_NOT_FIRST,
+        FIRST,
+        NOT_FIRST,
+        POTENTIAL_FIRST,
+        POTENTIAL_NOT_FIRST,
         MATCHED_NOT_FIRST,
-        ATTACHED_NOT_FIRST
+        ATTACHED_NOT_FIRST,
+	CONFIRMED_FIRST,
+        CONFIRMED_MIDDLE,
+        CONFIRMED_LAST,
+        FIRST_NOT_FIRST
       } t_cell_FSM_state;
 
     inline static const std::string cell_FSM_state2string(const t_cell_FSM_state & p_state);
@@ -88,17 +86,11 @@ namespace dicoplus
         case READY2START:
           return "READY2START";
           break;
-	case POTENTIAL_FIRST:
+        case POTENTIAL_FIRST:
           return "POTENTIAL_FIRST";
-	  break;
-	case START_POTENTIAL_NOT_FIRST:
-          return "START_POTENTIAL_NOT_FIRST";
-	  break;
+          break;
 	case POTENTIAL_NOT_FIRST:
           return "POTENTIAL_NOT_FIRST";
-	  break;
-	case POTENTIAL_FIRST_NOT_FIRST:
-          return "POTENTIAL_FIRST_NOT_FIRST";
 	  break;
 	case NOT_FIRST:
           return "NOT_FIRST";
@@ -115,14 +107,14 @@ namespace dicoplus
 	case CONFIRMED_FIRST:
           return "CONFIRMED_FIRST";
 	  break;
-	case MATCHING_NOT_FIRST:
-          return "MATCHING_NOT_FIRST";
-	  break;
 	case MATCHED_NOT_FIRST:
           return "MATCHING_NOT_FIRST";
 	  break;
 	case ATTACHED_NOT_FIRST:
           return "ATTACHED_NOT_FIRST";
+	  break;
+	case FIRST_NOT_FIRST:
+          return "FIRST_NOT_FIRST";
 	  break;
         default:
 	  std::stringstream l_stream;

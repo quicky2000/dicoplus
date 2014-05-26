@@ -61,7 +61,8 @@ namespace dicoplus
                                            dicoplus_global_bus_listener_if & p_listener);
     inline void attach_local_bus_listener(const uint32_t & p_x,
                                           const uint32_t & p_y,
-                                          dicoplus_local_bus_listener_if & p_listener);
+					  const dicoplus_types::t_orientation & p_orientation,
+					  dicoplus_local_bus_listener_if & p_listener);
   private:
     inline void check_coord(const uint32_t & p_x,
                             const uint32_t & p_y,
@@ -346,32 +347,32 @@ namespace dicoplus
 	// Bind north port of first line and south port of bottom line
 	for(unsigned int l_index = 0 ; l_index < m_width ; ++l_index)
 	  {
-	    m_macro_cells[l_index][0]->bind_north_port(m_fake_output_bus);
-	    m_macro_cells[l_index][m_height - 1]->bind_south_port(m_fake_output_bus);
+	    m_macro_cells[l_index][0]->bind_local_input_port(dicoplus_types::NORTH,m_fake_output_bus);
+	    m_macro_cells[l_index][m_height - 1]->bind_local_input_port(dicoplus_types::SOUTH,m_fake_output_bus);
 	  }
         
 	for(unsigned int l_x_index = 0; l_x_index < m_width ; ++l_x_index)
 	  {
 	    for(unsigned int l_y_index = 1; l_y_index < m_height ; ++l_y_index)
 	      {
-		m_macro_cells[l_x_index][l_y_index]->bind_north_port(m_macro_cells[l_x_index][l_y_index - 1]->get_output_bus());
-                m_macro_cells[l_x_index][l_y_index - 1]->bind_south_port(m_macro_cells[l_x_index][l_y_index]->get_output_bus());
+		m_macro_cells[l_x_index][l_y_index]->bind_local_input_port(dicoplus_types::NORTH,m_macro_cells[l_x_index][l_y_index - 1]->get_output_bus(dicoplus_types::SOUTH));
+                m_macro_cells[l_x_index][l_y_index - 1]->bind_local_input_port(dicoplus_types::SOUTH,m_macro_cells[l_x_index][l_y_index]->get_output_bus(dicoplus_types::NORTH));
 	      }
 	  }
 
 	// Bind west port of first column and south port of right column
 	for(unsigned int l_index = 0 ; l_index < m_height ; ++l_index)
 	  {
-	    m_macro_cells[0][l_index]->bind_west_port(m_fake_output_bus);
-	    m_macro_cells[m_width - 1][l_index]->bind_east_port(m_fake_output_bus);
+	    m_macro_cells[0][l_index]->bind_local_input_port(dicoplus_types::WEST,m_fake_output_bus);
+	    m_macro_cells[m_width - 1][l_index]->bind_local_input_port(dicoplus_types::EAST,m_fake_output_bus);
 	  }
         
 	for(unsigned int l_x_index = 1; l_x_index < m_width ; ++l_x_index)
 	  {
 	    for(unsigned int l_y_index = 0; l_y_index < m_height ; ++l_y_index)
 	      {
-		m_macro_cells[l_x_index][l_y_index]->bind_west_port(m_macro_cells[l_x_index - 1][l_y_index]->get_output_bus());
-                m_macro_cells[l_x_index - 1][l_y_index]->bind_east_port(m_macro_cells[l_x_index][l_y_index]->get_output_bus());
+		m_macro_cells[l_x_index][l_y_index]->bind_local_input_port(dicoplus_types::WEST,m_macro_cells[l_x_index - 1][l_y_index]->get_output_bus(dicoplus_types::EAST));
+                m_macro_cells[l_x_index - 1][l_y_index]->bind_local_input_port(dicoplus_types::EAST,m_macro_cells[l_x_index][l_y_index]->get_output_bus(dicoplus_types::WEST));
 	      }
 	  }
 
@@ -445,25 +446,20 @@ namespace dicoplus
 
     //--------------------------------------------------------------------------
     void dicoplus::attach_local_bus_listener(const uint32_t & p_x,
-                                              const uint32_t & p_y,
+					     const uint32_t & p_y,
+					     const dicoplus_types::t_orientation & p_orientation,
                                               dicoplus_local_bus_listener_if & p_listener)
     {
       check_coord(p_x,p_y,__LINE__,__FILE__);
-      if(!m_macro_cells[p_x][p_y]->is_attached_local_bus_listener_probe())
-        {
-          std::stringstream l_x_str;
-          l_x_str << p_x;
-          std::stringstream l_y_str;
-          l_y_str << p_y;
-          std::string l_probe_name = "local_probe_bus_from_cell_" + l_x_str.str() + "_" + l_y_str.str();
-          dicoplus_local_bus_probe * l_probe = new dicoplus_local_bus_probe(l_probe_name.c_str(),p_listener);
-          l_probe->m_clock(m_clk_sig);
-          m_macro_cells[p_x][p_y]->attach_local_bus_listener_probe(*l_probe);
-        }
-      else
-        {
-          m_macro_cells[p_x][p_y]->attach_local_bus_listener(p_listener);
-        }
+
+      std::stringstream l_x_str;
+      l_x_str << p_x;
+      std::stringstream l_y_str;
+      l_y_str << p_y;
+      std::string l_probe_name = "local_probe_bus_from_"+dicoplus_types::orientation2string(p_orientation)+"_cell_" + l_x_str.str() + "_" + l_y_str.str();
+      dicoplus_local_bus_probe * l_probe = new dicoplus_local_bus_probe(l_probe_name.c_str(),p_listener);
+      l_probe->m_clock(m_clk_sig);
+      m_macro_cells[p_x][p_y]->attach_local_bus_listener_probe(p_orientation,*l_probe);
     }
 
     //--------------------------------------------------------------------------

@@ -38,16 +38,14 @@ namespace dicoplus
     inline void attach_cell_listener(cell_listener_if & p_listener);
     inline void attach_global_bus_listener(dicoplus_global_bus_probe & p_probe);
     inline bool is_attached_local_bus_listener_probe(void)const;
-    inline void attach_local_bus_listener_probe(dicoplus_local_bus_probe & p_probe);
-    inline void attach_local_bus_listener(dicoplus_local_bus_listener_if & p_listener);
+    inline void attach_local_bus_listener_probe(const dicoplus_types::t_orientation & p_orientation,
+						dicoplus_local_bus_probe & p_probe);
     inline ~dicoplus_macro_cell(void);
     inline const std::string & get_name(void)const;
 
-    inline void bind_north_port(dicoplus_local_bus & p_bus);
-    inline void bind_east_port(dicoplus_local_bus & p_bus);
-    inline void bind_south_port(dicoplus_local_bus & p_bus);
-    inline void bind_west_port(dicoplus_local_bus & p_bus);
-    inline dicoplus_local_bus & get_output_bus(void);
+    inline void bind_local_input_port(const dicoplus_types::t_orientation & p_orientation,
+				      dicoplus_local_bus & p_bus);
+    inline dicoplus_local_bus & get_output_bus(const dicoplus_types::t_orientation & p_orientation);
 
     // Methods inherited from dicoplus_global_port_binding_if
     inline void bind_input_port(dicoplus_global_bus & p_bus);
@@ -59,8 +57,8 @@ namespace dicoplus
     dicoplus_cell m_cell;
     dicoplus_global_bus * m_global_bus;
     dicoplus_global_bus_probe * m_global_probe;
-    dicoplus_local_bus m_local_output_bus;
-    dicoplus_local_bus_probe * m_local_probe;
+    dicoplus_local_bus * m_local_output_buses[4];
+    dicoplus_local_bus_probe * m_local_probes[4];
   };
 
   //----------------------------------------------------------------------------
@@ -70,42 +68,28 @@ namespace dicoplus
     m_name(p_name),
     m_cell(sc_module_name(("Cell_"+p_name).c_str()),p_nb_neighbour),
     m_global_bus(NULL),
-    m_global_probe(NULL),
-    m_local_output_bus("Cell_"+p_name+"_output"),
-    m_local_probe(NULL)
+    m_global_probe(NULL)
       {
-	m_cell.bind_output_port(m_local_output_bus);
+        for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
+          {
+	    m_local_output_buses[l_orientation] = new dicoplus_local_bus("Cell_"+p_name+"_"+dicoplus_types::orientation2string((dicoplus_types::t_orientation)l_orientation)+"_output");
+	    m_cell.bind_local_output_port((dicoplus_types::t_orientation)l_orientation,*m_local_output_buses[l_orientation]);
+	    m_local_probes[l_orientation] = NULL;
+	  }
 	m_cell.m_clk(p_sig);
       }
 
     //----------------------------------------------------------------------------
-    void dicoplus_macro_cell::bind_north_port(dicoplus_local_bus & p_bus)
+    void dicoplus_macro_cell::bind_local_input_port(const dicoplus_types::t_orientation & p_orientation,
+						    dicoplus_local_bus & p_bus)
     {
-      m_cell.bind_north_port(p_bus);
+      m_cell.bind_local_input_port(p_orientation,p_bus);
     }
 
     //----------------------------------------------------------------------------
-    void dicoplus_macro_cell::bind_east_port(dicoplus_local_bus & p_bus)
-    {
-      m_cell.bind_east_port(p_bus);
-    }
-
-    //----------------------------------------------------------------------------
-    void dicoplus_macro_cell::bind_south_port(dicoplus_local_bus & p_bus)
-    {
-      m_cell.bind_south_port(p_bus);
-    }
-
-    //----------------------------------------------------------------------------
-    void dicoplus_macro_cell::bind_west_port(dicoplus_local_bus & p_bus)
-    {
-      m_cell.bind_west_port(p_bus);
-    }
-
-    //----------------------------------------------------------------------------
-    dicoplus_local_bus & dicoplus_macro_cell::get_output_bus(void)
+    dicoplus_local_bus & dicoplus_macro_cell::get_output_bus(const dicoplus_types::t_orientation & p_orientation)
       {
-	return m_local_output_bus;
+	return *m_local_output_buses[p_orientation];
       }
 
     //----------------------------------------------------------------------------
@@ -141,23 +125,11 @@ namespace dicoplus
     }
 
     //----------------------------------------------------------------------------
-    bool dicoplus_macro_cell::is_attached_local_bus_listener_probe(void)const
+    void dicoplus_macro_cell::attach_local_bus_listener_probe(const dicoplus_types::t_orientation & p_orientation,
+							      dicoplus_local_bus_probe & p_probe)
     {
-      return m_local_probe;
-    }
-
-    //----------------------------------------------------------------------------
-    void dicoplus_macro_cell::attach_local_bus_listener_probe(dicoplus_local_bus_probe & p_probe)
-    {
-      assert(NULL == m_local_probe);
-      p_probe.operator ()(m_local_output_bus);
-      m_local_probe = & p_probe;
-    }
-    //----------------------------------------------------------------------------
-    void dicoplus_macro_cell::attach_local_bus_listener(dicoplus_local_bus_listener_if & p_listener)
-    {
-      assert(m_local_probe);
-      m_local_probe->attach_listener(p_listener);
+      m_local_probes[p_orientation] = & p_probe;
+      p_probe.operator ()(*m_local_output_buses[p_orientation]);
     }
 
     //----------------------------------------------------------------------------
@@ -176,7 +148,10 @@ namespace dicoplus
     //----------------------------------------------------------------------------
     dicoplus_macro_cell::~dicoplus_macro_cell(void)
       {
-        delete m_local_probe;
+        for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
+          {
+	    delete m_local_probes[l_orientation];
+	  }
 	delete m_global_probe;
 	delete m_global_bus;
       }
