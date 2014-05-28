@@ -65,15 +65,6 @@ namespace dicoplus
   private:
     inline void run(void);
 
-    // Enumerated type to represent local message content
-    typedef enum
-      {
-        NO_MESSAGE,
-        NOT_VALID,
-        VALID,
-	CANCEL
-      } t_local_message;
-
     // Possible states for FSM of letters who can be the first letter of a word
     typedef enum
       {
@@ -122,18 +113,14 @@ namespace dicoplus
                                           const t_first_FSM_state & p_first_state,
                                           const t_not_first_FSM_state & p_not_first_FSM_state,
                                           const dicoplus_types::t_cell_FSM_state & p_representation_state);
-    inline void first_treat_cancel_message(const t_local_message (&p_messages)[4]);
-    inline void not_first_treat_cancel_message(const t_local_message (&p_messages)[4]);
-    inline void treat_local_message(const t_local_message (&p_messages)[4],
-                                    const unsigned int & p_nb_valid);
-    inline void first_treat_local_message(const t_local_message (&p_messages)[4],
-                                          const unsigned int & p_nb_valid);
-    inline void not_first_treat_local_message(const t_local_message (&p_messages)[4],
-                                              const unsigned int & p_nb_valid);
 
     inline void first_treat_message_completion(void);
     inline void not_first_treat_message_completion(void);
-    inline void send_data(bool p_data);
+
+    inline void first_treat_cancel_message(const dicoplus_types::t_local_message_content (&p_messages)[4]);
+    inline void not_first_treat_cancel_message(const dicoplus_types::t_local_message_content (&p_messages)[4]);
+
+    inline void send_data(const dicoplus_types::t_local_message_content & p_content);
     inline void no_data(void);
 
     // Connectivity
@@ -161,7 +148,7 @@ namespace dicoplus
     unsigned int m_remaining_locals;
     unsigned int m_nb_valid_msg;
     unsigned int m_nb_invalid_msg;
-    t_local_message m_local_messages[4];
+    dicoplus_types::t_local_message_content m_local_messages[4];
 
     // Variable to set to true by the debugger to activate some messages
     bool m_gdb_debug;
@@ -206,7 +193,7 @@ namespace dicoplus
             m_local_input_ports[l_orientation] = new dicoplus_local_input_port(dicoplus_types::orientation2string((dicoplus_types::t_orientation)l_orientation)+"_input");
             m_local_output_ports[l_orientation] = new dicoplus_local_output_port(dicoplus_types::orientation2string((dicoplus_types::t_orientation)l_orientation)+"_output");
             m_local_link_states[l_orientation].set_orientation((dicoplus_types::t_orientation)l_orientation);
-            m_local_messages[l_orientation] = NO_MESSAGE;
+            m_local_messages[l_orientation] = dicoplus_types::LOCAL_MESSAGE_NONE;
           }
 
 #ifdef DEBUG_DICOPLUS_CELL
@@ -358,7 +345,7 @@ namespace dicoplus
               set_internal_state(COMMON_FIRST_NOT_FIRST);
 
               // Notify neighbour cells that content is matching
-              send_data(true);
+              send_data(dicoplus_types::LOCAL_MESSAGE_WAKE_UP);
             }
           else
             {
@@ -366,7 +353,7 @@ namespace dicoplus
               set_internal_state(COMMON_NOT_FIRST);
 
               // Notify neighbour cells that content is not matching
-              send_data(false);
+              send_data(dicoplus_types::LOCAL_MESSAGE_NOT_VALID);
             }
 	  m_global_port_manager.post_message(p_message);
 	  break;
@@ -374,21 +361,45 @@ namespace dicoplus
 	case COMMON_NOT_FIRST:
 	  {
 	    m_last_match = p_message.get_data() == m_content;
-	    bool l_notify_ok = false;
-	    // Notify neighbour cells about content matching results
-	    for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
+
+	    if(m_last_match)
 	      {
-		l_notify_ok |= m_local_link_states[l_orientation].is_potential_predecessor();
+		dicoplus_types::t_local_message_content l_messages[4]; 
+		for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
+		  {
+		    l_messages[l_orientation] = dicoplus_types::LOCAL_MESSAGE_VALID;
+		  }
+		// Notify neighbour cells about content matching results
+		for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
+		  {
+		    if(m_local_link_states[l_orientation].is_potential_predecessor())
+		      {
+			for(unsigned int l_orientation2 = dicoplus_types::NORTH; l_orientation2 < dicoplus_types::WEST + 1; ++l_orientation2)
+			  {
+			    if(l_orientation != l_orientation2)
+			      {
+				l_messages[l_orientation2] = dicoplus_types::LOCAL_MESSAGE_WAKE_UP;
+			      }
+			  }
+			
+		      }
+		  }
+		for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
+		  {
+		    m_local_output_ports[l_orientation]->send(l_messages[l_orientation]);		    
+		  }
 	      }
-	    
-	    send_data(l_notify_ok && p_message.get_data() == m_content);
+	    else
+	      {
+		send_data(dicoplus_types::LOCAL_MESSAGE_NOT_VALID);
+	      }
           // Forward the message
 	    m_global_port_manager.post_message(p_message);
 	  }
 	  break;
         case COMMON_CONFIRMED:
           // Don't care about message content
-	  send_data(false);
+	  send_data(dicoplus_types::LOCAL_MESSAGE_NOT_VALID);
           // Forward the message
           m_global_port_manager.post_message(p_message);
           break ;
@@ -497,26 +508,26 @@ namespace dicoplus
                       std::cout << name() << " received " << dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_local_input_ports[l_orientation]->get_data().to_uint()) << " from " << dicoplus_types::orientation2string((dicoplus_types::t_orientation)l_orientation) << std::endl ;
                     }
 #endif // DEBUG_DICOPLUS_CELL
+		  dicoplus_types::t_local_message_content l_content = (dicoplus_types::t_local_message_content)m_local_input_ports[l_orientation]->get_data().to_uint();
 		  switch(m_local_input_ports[l_orientation]->get_data().to_uint())
 		    {
 		    case dicoplus_types::LOCAL_MESSAGE_VALID :
+		    case dicoplus_types::LOCAL_MESSAGE_WAKE_UP :
 		      ++m_nb_valid_msg;
                       ++l_nb_local_msg;
-		      m_local_messages[l_orientation] = VALID;
 		      break;
 		    case dicoplus_types::LOCAL_MESSAGE_NOT_VALID :
 		      ++m_nb_invalid_msg;
                       ++l_nb_local_msg;
-		      m_local_messages[l_orientation] = NOT_VALID;
 		      break;
 		    case dicoplus_types::LOCAL_MESSAGE_CANCEL :
 		      ++l_nb_cancel_msg;
-		      m_local_messages[l_orientation] = CANCEL;
                       break;
 		    default:
-		      quicky_exception::quicky_logic_exception("Unhandled local message \""+dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_local_input_ports[l_orientation]->get_data().to_uint())+"\" in cell \""+std::string(name())+"\"",__LINE__,__FILE__);
+		      quicky_exception::quicky_logic_exception("Unhandled local message \""+dicoplus_types::local_message_content2string(l_content)+"\" in cell \""+std::string(name())+"\"",__LINE__,__FILE__);
 		      break;
 		    }
+		  m_local_messages[l_orientation] = l_content;
 
                 }
             }
@@ -556,7 +567,7 @@ namespace dicoplus
                   //Reinitialise messages related variables
                   for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
                     {
-                      m_local_messages[l_orientation] = NO_MESSAGE;
+                      m_local_messages[l_orientation] = dicoplus_types::LOCAL_MESSAGE_NONE;
                     }
 
                   m_remaining_locals = m_nb_neighbour;
@@ -566,13 +577,6 @@ namespace dicoplus
             }
 	  wait();
 	}
-    }
-
-    //----------------------------------------------------------------------------
-    void dicoplus_cell::treat_local_message(const t_local_message (&p_messages)[4],
-                                            const unsigned int & p_nb_valid)
-    {
-      // To be removed
     }
 
     //----------------------------------------------------------------------------
@@ -603,7 +607,7 @@ namespace dicoplus
               {
                 if(m_local_link_states[l_orientation].is_potential_first_predecessor())
                   {
-                    if(VALID == m_local_messages[l_orientation])
+                    if(dicoplus_types::LOCAL_MESSAGE_VALID == m_local_messages[l_orientation] || dicoplus_types::LOCAL_MESSAGE_WAKE_UP == m_local_messages[l_orientation])
                       {
                         m_local_link_states[l_orientation].confirm_first_predecessor();
                         l_confirmed = true;
@@ -668,12 +672,12 @@ namespace dicoplus
                          && m_local_link_states[l_orientation2].is_potential_successor_of((dicoplus_types::t_orientation)l_orientation) 
 			 )
                         {
-			  if(VALID == m_local_messages[l_orientation2])
+			  if(dicoplus_types::LOCAL_MESSAGE_VALID == m_local_messages[l_orientation2] || dicoplus_types::LOCAL_MESSAGE_WAKE_UP == m_local_messages[l_orientation2])
 			    {
 			      l_confirmed = true;
 			      m_local_link_states[l_orientation2].confirm_successor_of((dicoplus_types::t_orientation)l_orientation);
 			    }
-			  else if(NOT_VALID == m_local_messages[l_orientation])
+			  else if(dicoplus_types::LOCAL_MESSAGE_NOT_VALID == m_local_messages[l_orientation])
 			    {
 			      // Invalid potential successors
 			      m_local_link_states[l_orientation2].cancel_successor_of((dicoplus_types::t_orientation)l_orientation);
@@ -695,7 +699,7 @@ namespace dicoplus
 			  print_internal_state();
 			}
 #endif // DEBUG_DICOPLUS_CELL
-		      m_local_output_ports[l_orientation]->cancel();
+		      m_local_output_ports[l_orientation]->send(dicoplus_types::LOCAL_MESSAGE_CANCEL);
 		    }
                 }
             }
@@ -729,14 +733,9 @@ namespace dicoplus
           {
             for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
               {
-                if(VALID == m_local_messages[l_orientation] && !m_local_link_states[l_orientation].is_potential_predecessor())
+                if(dicoplus_types::LOCAL_MESSAGE_WAKE_UP == m_local_messages[l_orientation] && !m_local_link_states[l_orientation].is_potential_predecessor())
                   {
-		    bool l_successor = false;
-		    for(unsigned int l_orientation2 = dicoplus_types::NORTH; l_orientation2 < dicoplus_types::WEST + 1; ++l_orientation2)
-		      {
-			l_successor |=  m_local_link_states[l_orientation].is_successor_of((dicoplus_types::t_orientation)l_orientation2);
-		      }
-		    if(!l_successor) m_local_link_states[l_orientation].set_potential_predecessor();  
+                    m_local_link_states[l_orientation].set_potential_predecessor();
                   }
 	      }
           }
@@ -782,21 +781,7 @@ namespace dicoplus
     }
 
     //----------------------------------------------------------------------------
-    void dicoplus_cell::first_treat_local_message(const t_local_message (&p_messages)[4],
-                                                  const unsigned int & p_nb_valid)
-    {
-      // To be removed
-    }
-
-    //----------------------------------------------------------------------------
-    void dicoplus_cell::not_first_treat_local_message(const t_local_message (&p_messages)[4],
-                                                      const unsigned int & p_nb_valid)
-    {
-      // To be removed
-    }
-
-    //----------------------------------------------------------------------------
-    void dicoplus_cell::first_treat_cancel_message(const t_local_message (&p_messages)[4])
+    void dicoplus_cell::first_treat_cancel_message(const dicoplus_types::t_local_message_content (&p_messages)[4])
     {
 #ifdef DEBUG_DICOPLUS_CELL
       if(m_gdb_debug)
@@ -815,7 +800,7 @@ namespace dicoplus
               {
                 if(m_local_link_states[l_orientation].is_first_predecessor())
                   {
-                    if(CANCEL == p_messages[l_orientation])
+                    if(dicoplus_types::LOCAL_MESSAGE_CANCEL == p_messages[l_orientation])
                       {
                         m_local_link_states[l_orientation].cancel_first_predecessor();
                       }
@@ -842,7 +827,7 @@ namespace dicoplus
     }
 
     //----------------------------------------------------------------------------
-    void dicoplus_cell::not_first_treat_cancel_message(const t_local_message (&p_messages)[4])
+    void dicoplus_cell::not_first_treat_cancel_message(const dicoplus_types::t_local_message_content (&p_messages)[4])
     {
 #ifdef DEBUG_DICOPLUS_CELL
       if(m_gdb_debug)
@@ -872,7 +857,7 @@ namespace dicoplus
                   {
                     if(m_local_link_states[l_orientation].is_successor_of((dicoplus_types::t_orientation)l_orientation2))
                       {
-                        if(CANCEL == p_messages[l_orientation])
+                        if(dicoplus_types::LOCAL_MESSAGE_CANCEL == p_messages[l_orientation])
                           {
 			    m_local_link_states[l_orientation].cancel_successor_of((dicoplus_types::t_orientation)l_orientation2);
                             
@@ -896,7 +881,7 @@ namespace dicoplus
                                     print_internal_state();
                                   }
 #endif // DEBUG_DICOPLUS_CELL
-                                m_local_output_ports[l_orientation2]->cancel();
+                                m_local_output_ports[l_orientation2]->send(dicoplus_types::LOCAL_MESSAGE_CANCEL);
                               }
 			  }
 			else
@@ -1098,11 +1083,11 @@ namespace dicoplus
         }
     }
     //--------------------------------------------------------------------------
-    void dicoplus_cell::send_data(bool p_data)
+    void dicoplus_cell::send_data(const dicoplus_types::t_local_message_content & p_content)
     {
       for(unsigned int l_orientation = dicoplus_types::NORTH; l_orientation < dicoplus_types::WEST + 1; ++l_orientation)
 	{
-	  m_local_output_ports[l_orientation]->send_data(p_data);
+	  m_local_output_ports[l_orientation]->send(p_content);
 	}
     }
 

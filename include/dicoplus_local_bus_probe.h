@@ -80,17 +80,16 @@ namespace dicoplus
 	      switch(m_data.read().to_uint())
 		{
 		case dicoplus_types::LOCAL_MESSAGE_NOT_VALID :
-		  m_listener.data(false);
-		  break;
-		case dicoplus_types::LOCAL_MESSAGE_VALID:
-		  m_listener.data(true);
+		case dicoplus_types::LOCAL_MESSAGE_VALID :
+		case dicoplus_types::LOCAL_MESSAGE_WAKE_UP:
+		  m_listener.data((dicoplus_types::t_local_message_content)m_data.read().to_uint());
 		  break;
 		case dicoplus_types::LOCAL_MESSAGE_CANCEL :
 		  m_listener.cancel();
 		  break;
 		default:
 		  {
-		    throw quicky_exception::quicky_logic_exception("Unhandled data value"+dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_data.read().to_uint())+" from probe \""+std::string(name()),__LINE__,__FILE__);
+		    throw quicky_exception::quicky_logic_exception("Unhandled data value "+dicoplus_types::local_message_content2string((dicoplus_types::t_local_message_content)m_data.read().to_uint())+" from probe \""+std::string(name()),__LINE__,__FILE__);
 		  }
 		}
 	    }

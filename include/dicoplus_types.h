@@ -54,7 +54,9 @@ namespace dicoplus
       {
 	LOCAL_MESSAGE_NOT_VALID,
 	LOCAL_MESSAGE_VALID,
-	LOCAL_MESSAGE_CANCEL
+	LOCAL_MESSAGE_WAKE_UP,
+	LOCAL_MESSAGE_CANCEL,
+	LOCAL_MESSAGE_NONE
       } t_local_message_content;
     
     inline static const std::string local_message_content2string(const t_local_message_content & p_message);
@@ -135,8 +137,14 @@ namespace dicoplus
 	case LOCAL_MESSAGE_VALID:
 	  return "LOCAL_MESSAGE_VALID";
 	  break;
+	case LOCAL_MESSAGE_WAKE_UP:
+	  return "LOCAL_MESSAGE_WAKE_UP";
+	  break;
 	case LOCAL_MESSAGE_CANCEL:
 	  return "LOCAL_MESSAGE_CANCEL";
+	  break;
+	case LOCAL_MESSAGE_NONE:
+	  return "LOCAL_MESSAGE_NONE";
 	  break;
 	default:
 	  std::stringstream l_stream;

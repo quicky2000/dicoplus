@@ -30,7 +30,7 @@ namespace dicoplus
                                        dicoplus_synoptic_local_bus & p_bus);
     // Virtual methods to implement inherited from dicoplus_local_bus_listener_if
     inline void no_activity(void);
-    inline void data(bool p_data);
+    inline void data(const dicoplus_types::t_local_message_content & p_content);
     inline void cancel(void);
     // End of virtual methods
   private:
@@ -54,9 +54,27 @@ namespace dicoplus
     }
 
     //----------------------------------------------------------------------------
-    void synoptic_local_bus_listener::data(bool p_data)
+    void synoptic_local_bus_listener::data(const dicoplus_types::t_local_message_content & p_content)
     {
-      m_bus.set_color_code(m_color_code,p_data ? 0 : 255, p_data ? 255 : 0,0);
+      switch(p_content)
+	{
+	case dicoplus_types::LOCAL_MESSAGE_NOT_VALID:
+	  m_bus.set_color_code(m_color_code,0xFF,0x45,0x0);
+	  break;
+	case dicoplus_types::LOCAL_MESSAGE_VALID:
+	  m_bus.set_color_code(m_color_code,0x0,0xFF,0x0);
+	  break;
+	case dicoplus_types::LOCAL_MESSAGE_WAKE_UP:
+	  m_bus.set_color_code(m_color_code,0x98,0xFB,0x98);
+	  break;
+	case dicoplus_types::LOCAL_MESSAGE_CANCEL:
+	  m_bus.set_color_code(m_color_code,0xFF,0x0,0x0);
+	  break;
+	default:
+          throw quicky_exception::quicky_logic_exception("No synoptic representation for local message content \""+dicoplus_types::local_message_content2string(p_content)+"\"",__LINE__,__FILE__);
+	  break;
+	}
+      m_bus.set_color_code(m_color_code,p_content ? 0 : 255, p_content ? 255 : 0,0);
       m_bus.paint();
     }
 

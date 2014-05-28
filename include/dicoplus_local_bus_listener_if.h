@@ -18,13 +18,15 @@
 #ifndef _DICOPLUS_LOCAL_BUS_LISTENER_IF_H_
 #define _DICOPLUS_LOCAL_BUS_LISTENER_IF_H_
 
+#include "dicoplus_types.h"
+
 namespace dicoplus
 {
   class dicoplus_local_bus_listener_if
   {
   public:
     virtual void no_activity(void)=0;
-    virtual void data(bool p_data)=0;
+    virtual void data(const dicoplus_types::t_local_message_content & p_content)=0;
     virtual void cancel(void)=0;
     inline virtual ~dicoplus_local_bus_listener_if(void){}
   private:

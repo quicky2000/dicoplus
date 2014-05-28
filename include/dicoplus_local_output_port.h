@@ -27,8 +27,7 @@ namespace dicoplus
   public:
     inline dicoplus_local_output_port(const std::string & p_name);
     inline void operator () (dicoplus_local_bus  & p_bus);
-    inline void send_data(bool p_data);
-    inline void cancel(void);
+    inline void send(const dicoplus_types::t_local_message_content p_content);
     inline void no_data(void);
   private:
     sc_out<bool> m_valid;
@@ -43,16 +42,9 @@ namespace dicoplus
       }
 
     //----------------------------------------------------------------------------
-    void dicoplus_local_output_port::send_data(bool p_data)
+    void dicoplus_local_output_port::send(const dicoplus_types::t_local_message_content p_content)
     {
-      m_data = p_data ? dicoplus_types::LOCAL_MESSAGE_VALID : dicoplus_types::LOCAL_MESSAGE_NOT_VALID ;
-      m_valid = true;
-    }
-
-    //----------------------------------------------------------------------------
-    void dicoplus_local_output_port::cancel(void)
-    {
-      m_data = dicoplus_types::LOCAL_MESSAGE_CANCEL;
+      m_data = p_content;
       m_valid = true;
     }
 
